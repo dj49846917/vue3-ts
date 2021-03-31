@@ -1,8 +1,14 @@
 const routes = [
   {
     path: '/',
-    name: 'index',
-    component: () => import('@/Layout/frontLayout.vue'), //路由懒加载
+    component: () => import('@/Layout/frontLayout/index.vue'), //路由懒加载
+    children: [ // 首页
+      {
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/Home/index.vue')
+      },
+    ]
   }
 ]
 

@@ -7,8 +7,10 @@ export default defineConfig({
   plugins: [
     vue()
   ],
-  alias: {
-    '@': resolve(__dirname, "src") //设置别名
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, "src") //设置别名
+    }
   },
   base: './',
   server: {
