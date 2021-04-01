@@ -2,6 +2,7 @@ import logo from '@/assets/images/logo.png'
 import arrow_down from '@/assets/images/arrow_down.png'
 import banner from '@/assets/uploads/banner.png'
 import banner2 from '@/assets/uploads/banner2.jpg'
+import banner3 from '@/assets/uploads/banner3.png'
 import uploads1 from '@/assets/uploads/1.jpg'
 import uploads2 from '@/assets/uploads/2.jpg'
 import uploads3 from '@/assets/uploads/3.jpg'
@@ -15,11 +16,14 @@ import icon2 from '@/assets/images/icon2.png'
 import icon3 from '@/assets/images/icon3.png'
 import qrcode_app from '@/assets/images/qrcode_app.png'
 import record_number from '@/assets/images/record_number.png'
+import about_info from '@/assets/images/about_info.png'
+import liuli from '@/assets/uploads/liuli.jpg'
 export const ENV_ICON = {
   logo,
   arrow_down,
   banner,
   banner2,
+  banner3,
   uploads1,
   uploads2,
   uploads3,
@@ -33,4 +37,6 @@ export const ENV_ICON = {
   icon3,
   qrcode_app,
   record_number,
+  about_info,
+  liuli,
 }

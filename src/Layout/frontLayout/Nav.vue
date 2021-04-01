@@ -19,16 +19,16 @@
               </div>
               <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                  <li class="menuItem active"><a href="首页.html">首页</a></li>
+                  <li class="menuItem active"><router-link to="/">首页</router-link></li>
                   <li class="menuItem"><a href="#features">司法拍卖</a></li>
-                  <li class="menuItem"><a href="资产竞拍.html">资产竞拍</a></li>
+                  <li class="menuItem"><router-link to="/auction">资产竞拍</router-link></li>
                   <li class="menuItem"><a href="#installation">二手房源</a></li>
                   <li class="menuItem"><a href="#one-pager">代办服务</a></li>
                   <li class="menuItem"><a href="#extras">渠道商</a></li>
                   <!--<li class="menuItem"><a href="#wordpress">服务商</a></li>-->
                   <li class="menuItem"><a href="#contact">优选经纪人</a></li>
-                  <li class="menuItem"><a href="关于我们.html">关于我们</a></li>
-                  <li class="menuItem"><a href="个人中心.html">个人中心</a></li>
+                  <li class="menuItem"><router-link to="/about">关于我们</router-link></li>
+                  <li class="menuItem"><router-link to="/personal">个人中心</router-link></li>
                 </ul>
               </div>
             </div>
