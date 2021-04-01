@@ -10,7 +10,7 @@
             </p>
           </div>
         </div>
-        <div class="fl search_box ofw col-lg-6">
+        <div class="fl search_box ofw col-lg-6" v-if="!isLogin">
           <input
             class="f10"
             type="text"
@@ -24,13 +24,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { ENV_ICON } from '@/constant/index'
+import { useRoute } from "vue-router";
 export default defineComponent({
   setup() {
+    const route = useRoute()
+    const isLogin = ref((route.path === "/login" || route.path === "/register") ? true : false)
     return {
       logo: ENV_ICON.logo,
-      arrow_down: ENV_ICON.arrow_down
+      arrow_down: ENV_ICON.arrow_down,
+      isLogin
     };
   },
 });

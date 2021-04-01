@@ -8,14 +8,29 @@ const routes = [
         name: 'home',
         component: () => import('@/views/Home/index.vue')
       },
+      { // 登录
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/Login/index.vue')
+      },
+      { // 注册
+        path: '/register',
+        name: 'Register',
+        component: () => import('@/views/Login/Register.vue')
+      },
+      { // 忘记密码
+        path: '/forgetpwd',
+        name: 'ForgetPwd',
+        component: () => import('@/views/Login/ForgetPwd.vue')
+      },
       { // 资产拍卖
         path: '/auction',
-        name: 'auction',
+        name: 'Auction',
         component: () => import('@/views/AssetAuction/index.vue')
       },
       { // 关于我们
         path: '/about',
-        name: 'about',
+        name: 'About',
         component: () => import('@/views/About/index.vue')
       },
       { // 个人中心
@@ -63,7 +78,7 @@ const routes = [
             name: 'BankList',
             component: () => import('@/views/Personal/BankList/index.vue')
           },
-          { // 银行卡
+          { // 添加银行卡
             path: '/personal/addbank',
             name: 'AddBank',
             component: () => import('@/views/Personal/BankList/AddBank.vue')
