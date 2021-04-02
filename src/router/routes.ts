@@ -28,6 +28,11 @@ const routes = [
         name: 'Auction',
         component: () => import('@/views/AssetAuction/index.vue')
       },
+      { // 资产拍卖详情
+        path: '/auction/detail',
+        name: 'AuctionDetail',
+        component: () => import('@/views/AssetAuction/AssetAuctionDetail/index.vue')
+      },
       { // 关于我们
         path: '/about',
         name: 'About',
@@ -94,6 +99,48 @@ const routes = [
             component: () => import('@/views/Personal/ChangePwd/index.vue')
           },
         ]
+      },
+    ]
+  },
+  { // 后台的模板
+    path: '/dealer',
+    redirect: '/dealer/companyinfo',  
+    component: () => import('@/Layout/backLayout/index.vue'), 
+    children: [
+      { // 公司信息
+        path: '/dealer/companyinfo',
+        name: 'CompanyInfo',
+        component: () => import('@/views/Dealer/CompanyInfo/index.vue')
+      },
+      { // 公司资质
+        path: '/dealer/companyqualification',
+        name: 'CompanyQualification',
+        component: () => import('@/views/Dealer/CompanyQualification/index.vue')
+      },
+      { // 联系信息
+        path: '/dealer/contactinfo',
+        name: 'ContactInfo',
+        component: () => import('@/views/Dealer/ContactInfo/index.vue')
+      },
+      { // 保证金信息
+        path: '/dealer/entryinfo',
+        name: 'EntryInfo',
+        component: () => import('@/views/Dealer/EntryInfo/index.vue')
+      },
+      { // 标的物管理
+        path: '/dealer/projectinfolist',
+        name: 'ProjectInfoList',
+        component: () => import('@/views/Dealer/ProjectInfoList/index.vue')
+      },
+      { // 标的物增加
+        path: '/dealer/projectinfoadd',
+        name: 'ProjectInfoAdd',
+        component: () => import('@/views/Dealer/ProjectInfoAdd/index.vue')
+      },
+      { // 公告信息
+        path: '/dealer/noticeinfo',
+        name: 'NoticeInfo',
+        component: () => import('@/views/Dealer/NoticeInfo/index.vue')
       },
     ]
   }

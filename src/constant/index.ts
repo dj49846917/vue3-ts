@@ -19,6 +19,8 @@ import record_number from '@/assets/images/record_number.png'
 import about_info from '@/assets/images/about_info.png'
 import liuli from '@/assets/uploads/liuli.jpg'
 import login_img from '@/assets/images/login_img.png'
+import pro from '@/assets/images/pro.png'
+import logo_user from '@/assets/images/logo_user.png'
 export const ENV_ICON = {
   logo,
   arrow_down,
@@ -41,4 +43,6 @@ export const ENV_ICON = {
   about_info,
   liuli,
   login_img,
+  pro,
+  logo_user,
 }

@@ -8,10 +8,10 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import FrontHeader from "@/Layout/frontLayout/Header.vue";
+import FrontHeader from "@/components/Header.vue";
 import FrontSearch from "@/Layout/frontLayout/Search.vue";
 import FrontNav from "@/Layout/frontLayout/Nav.vue";
-import FrontFooter from "@/Layout/frontLayout/Footer.vue";
+import FrontFooter from "@/components/Footer.vue";
 import { useRoute } from "vue-router";
 export default defineComponent({
   components: {
