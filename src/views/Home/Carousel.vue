@@ -1,32 +1,18 @@
 <template>
-  <div id="myCarousel" class="carousel slide banner cy_banner">
-    <!-- 轮播（Carousel）指标 -->
-    <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <!--<li data-target="#myCarousel" data-slide-to="2"></li>-->
-    </ol>
-    <!-- 轮播（Carousel）项目 -->
-    <div class="carousel-inner">
-      <div class="item active">
+  <div class="carousel-box">
+    <el-carousel :interval="5000" arrow="always" trigger="click">
+      <el-carousel-item>
         <img :src="banner" alt="First slide" />
-      </div>
-      <div class="item">
+      </el-carousel-item>
+      <el-carousel-item>
         <img :src="banner2" alt="Second slide" />
-      </div>
-    </div>
-    <!-- 轮播（Carousel）导航 -->
-    <a class="carousel-control left" href="#myCarousel" data-slide="prev"
-      >&lsaquo;</a
-    >
-    <a class="carousel-control right" href="#myCarousel" data-slide="next"
-      >&rsaquo;</a
-    >
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
 <script>
-import { ENV_ICON } from '@/constant/index'
+import { ENV_ICON } from "@/constant/index";
 export default {
   setup() {
     return {
@@ -38,4 +24,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-carousel__container) {
+  height: 500px;
+}
+:deep(.el-carousel__button) {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+}
+:deep(.el-carousel__indicator--horizontal) {
+  padding: 12px 2px;
+}
+:deep(.el-carousel__arrow--left) {
+  left: 120px;
+}
+:deep(.el-carousel__arrow--right) {
+  right: 120px;
+}
+:deep(.el-carousel__arrow) {
+  width: auto;
+  height: auto;
+  background-color: rgba(31, 45, 61, 0);
+  color: #dcd2ca;
+}
+:deep(.el-carousel__arrow):hover {
+  color: #fff;
+}
+:deep(.el-icon-arrow-left) {
+  font-size: 50px;
+}
+:deep(.el-icon-arrow-right) {
+  font-size: 50px;
+}
 </style>
