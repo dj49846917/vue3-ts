@@ -4,7 +4,7 @@
       <dt><i class="iconfont icon-dingdan"></i>我的竞拍</dt>
       <dd>
         <ul>
-          <li class="on"><router-link to="/personal/projectbynopayentry">待交保</router-link></li>
+          <li><router-link to="/personal/projectbynopayentry">待交保</router-link></li>
           <li><router-link to="/personal/projectbymy">我的参拍</router-link></li>
           <li><router-link to="/personal/projectbyok">已拍下</router-link></li>
           <li><router-link to="/personal/entrylist">保证金</router-link></li>
@@ -12,7 +12,7 @@
         </ul>
       </dd>
     </dl>
-    <dl class="active">
+    <dl>
       <dt><i class="iconfont icon-yonghuxinxi-"></i>个人信息</dt>
       <dd>
         <ul>
@@ -35,4 +35,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.router-link-active {
+  color: #c7171e;
+  background: #fff0f0;
+}
 </style>

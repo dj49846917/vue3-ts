@@ -19,16 +19,15 @@
               </div>
               <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                  <li class="menuItem active"><router-link to="/">首页</router-link></li>
-                  <li class="menuItem"><a href="#features">司法拍卖</a></li>
-                  <li class="menuItem"><router-link to="/auction">资产竞拍</router-link></li>
-                  <li class="menuItem"><a href="#installation">二手房源</a></li>
-                  <li class="menuItem"><a href="#one-pager">代办服务</a></li>
-                  <li class="menuItem"><a href="#extras">渠道商</a></li>
-                  <!--<li class="menuItem"><a href="#wordpress">服务商</a></li>-->
-                  <li class="menuItem"><a href="#contact">优选经纪人</a></li>
-                  <li class="menuItem"><router-link to="/about">关于我们</router-link></li>
-                  <li class="menuItem"><router-link to="/personal">个人中心</router-link></li>
+                  <router-link to="/" class="nav-item">首页</router-link>
+                  <router-link to="/1" class="nav-item">司法拍卖</router-link>
+                  <router-link to="/auction" class="nav-item">资产竞拍</router-link>
+                  <router-link to="/2" class="nav-item">二手房源</router-link>
+                  <router-link to="/3" class="nav-item">代办服务</router-link>
+                  <router-link to="/4" class="nav-item">渠道商</router-link>
+                  <router-link to="/5" class="nav-item">优选经纪人</router-link>
+                  <router-link to="/about" class="nav-item">关于我们</router-link>
+                  <router-link to="/personal" class="nav-item">个人中心</router-link>
                 </ul>
               </div>
             </div>
@@ -51,4 +50,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  .nav-item {
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 30px;
+    color: #fff;
+  }
+  .nav-item:hover {
+    background: #9c0510;
+  }
+  .router-link-exact-active {
+    background: #9c0510;
+  }
 </style>

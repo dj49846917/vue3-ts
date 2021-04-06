@@ -10,4 +10,8 @@ export default defineComponent({
 })
 </script>
 
-<style></style>
+<style>
+a {
+  text-decoration: none !important;
+}
+</style>
