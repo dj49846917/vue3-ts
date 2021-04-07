@@ -1,6 +1,6 @@
 <template>
   <div class="carousel-box">
-    <el-carousel :interval="5000" arrow="always" trigger="click">
+    <el-carousel :interval="5000" autoplay arrow="always" trigger="click">
       <el-carousel-item>
         <img :src="banner" alt="First slide" />
       </el-carousel-item>
@@ -24,9 +24,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-carousel__container) {
-  height: 500px;
-}
 :deep(.el-carousel__button) {
   width: 12px;
   height: 12px;
@@ -55,5 +52,8 @@ export default {
 }
 :deep(.el-icon-arrow-right) {
   font-size: 50px;
+}
+img {
+  width: 100%;
 }
 </style>
