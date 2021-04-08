@@ -87,6 +87,7 @@ import { useStore } from "vuex";
 import { myCheckPhone } from "@/utils/myValidate";
 import { loginService } from "@/service/login";
 import { useRouter } from "vue-router";
+import Cookie from 'js-cookie';
 export default defineComponent({
   setup() {
     // 设置背景颜色
@@ -198,8 +199,9 @@ export default defineComponent({
             type: "success",
             duration: 1000,
             onClose: async () => {
-              await store.dispatch("user/login", result);
-              router.push("/")
+              console.log("result.data.user", result.data.user)
+              Cookie.set("userInfo", JSON.stringify(result.data.user), { expires: 1 })
+              router.push('/')
             }
           });
         }

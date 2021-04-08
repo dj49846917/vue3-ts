@@ -17,6 +17,7 @@ const state:stateProp = {
 
 const mutations = {
   setUser: (state: { userInfo: stateProp }, userInfo: any) => {
+    console.log(userInfo)
     state.userInfo = userInfo
   },
 }

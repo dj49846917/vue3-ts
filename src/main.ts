@@ -8,6 +8,7 @@ import '@/assets/css/bootstrap.css'
 import '@/assets/css/rt.css'
 import '@/assets/css/iconfont.css'
 import axios from 'axios'
+import '@/utils/permission'
 
 const app = createApp(App)
 app.config.globalProperties.$axios = axios
