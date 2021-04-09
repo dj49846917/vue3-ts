@@ -12,19 +12,34 @@ import FrontHeader from "@/components/Header.vue";
 import FrontSearch from "@/Layout/frontLayout/Search.vue";
 import FrontNav from "@/Layout/frontLayout/Nav.vue";
 import FrontFooter from "@/components/Footer.vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
 export default defineComponent({
   components: {
     FrontHeader,
     FrontSearch,
     FrontNav,
-    FrontFooter
+    FrontFooter,
   },
   setup() {
-    const route = useRoute()
-    const isLogin = ref((route.path === "/login" || route.path === "/register") ? true : false)
+    const route = useRoute();
+    const isLogin = ref(false)
+    if(route.path === "/login" || route.path === "/register") {
+      isLogin.value = true
+    } else {
+      isLogin.value = false
+    }
+
+    // 监听路由值得变化
+    onBeforeRouteUpdate((to): void => {
+      console.log("to.path", to.path)
+      if(to.path === "/login" || to.path === "/register") {
+        isLogin.value = true
+      } else {
+        isLogin.value = false
+      }
+    });
     return {
-      isLogin
+      isLogin,
     };
   },
 });

@@ -8,15 +8,21 @@
       <form class="mt10">
         <div class="form_item ofw">
           <label class="form_name">公司名称：</label>
-          <div class="form_value"><span>九一融易资产管理有限公司</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.CompanyName }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">店铺名称：</label>
-          <div class="form_value"><span>九一融易</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.DealerName }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">商家编号：</label>
-          <div class="form_value"><span>10249326</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.DealerCode }}</span>
+          </div>
         </div>
       </form>
     </div>
@@ -25,33 +31,41 @@
       <form class="mt10">
         <div class="form_item ofw">
           <label class="form_name">开户名：</label>
-          <div class="form_value"><span>九一融易资产管理有限公司</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.BankAccountName }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">开户行支行名称：</label>
           <div class="form_value">
-            <span>中国光大银行重庆分行星光支行</span>
+            <span>{{ DealerInfo.OpenSubBankName }}</span>
           </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">开户银行支行所在地：</label>
-          <div class="form_value"><span>重庆渝北区天宫殿街道</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.OpenSubBankAddress }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">银行账号：</label>
-          <div class="form_value"><span>78490188000189385</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.BankAccountNo }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">银行支行联行号：</label>
-          <div class="form_value"><span>303653000146</span></div>
+          <div class="form_value">
+            <span>{{ DealerInfo.SubBankNo }}</span>
+          </div>
         </div>
         <div class="form_item ofw">
           <label class="form_name">银行开户许可证：</label>
           <div class="form_value">
             <div class="ofw">
               <ul class="updateP_list ofw">
-                <li class="fl">
-                  <img :src="uploads2" style="width: 100%" />
+                <li class="fl" v-for="(item, index) in BankOpenLicence" :key="index">
+                  <img :src="item.FilePath" style="width: 100%" />
                 </li>
               </ul>
             </div>
@@ -62,16 +76,34 @@
   </div>
 </template>
 
-<script>
-import { ENV_ICON } from '@/constant/index'
-
-export default {
+<script lang="ts">
+import { CookieConfig } from "@/constant/config";
+import Cookies from "js-cookie";
+import { UserInfo } from "@/types/types";
+import { defineComponent, toRefs } from "vue";
+export default defineComponent({
   setup() {
+    let userInfo: UserInfo = {
+      DealerInfo: null,
+      LoginUserInfo: {},
+    };
+    try {
+      userInfo = JSON.parse(Cookies.get(CookieConfig.USER_INFO) as string);
+    } catch (error) {
+      console.log("error", error);
+    }
+    let BankOpenLicence = [];
+    try {
+      BankOpenLicence = JSON.parse(userInfo.DealerInfo?.BankOpenLicence);
+    } catch (error) {
+      console.log("error2", error);
+    }
     return {
-      uploads2: ENV_ICON.uploads2
+      ...toRefs(userInfo),
+      BankOpenLicence,
     };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -25,6 +25,8 @@
       >
       <!--<a class="gray9" href=""><img src="images/record_number.png"> 渝公网安备 50019002500991号</a>-->
     </p>
+    <router-link class="showBtn" to="/">商家前台</router-link>
+    <router-link class="showBtn2" to="/dealer/companyinfo">商家后台</router-link>
     <!--<p class="textC gray9 mt10">Copyright © 2012 - 2019 - 重庆市两江新区长运小额贷款有限公司</p>-->
   </footer>
   <footer class="footer ofw" style="display: none">
@@ -57,6 +59,7 @@
     <p class="textC gray9 mt10">
       Copyright © 2012 - 2019 - 重庆市两江新区长运小额贷款有限公司
     </p>
+    
   </footer>
 </template>
 
@@ -73,4 +76,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.showBtn {
+  color: #fff;
+}
+.showBtn2 {
+  color: #fff;
+  float: right;
+}
 </style>

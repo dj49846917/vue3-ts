@@ -80,14 +80,17 @@
 </template>
 
 <script lang="ts">
-import { ENV_ICON } from "@/constant/index";
+
 import { defineComponent, reactive, ref, toRefs, unref } from "vue";
 import { ElForm, ElMessage } from "element-plus";
 import { useStore } from "vuex";
+import Cookies from "js-cookie";
 import { myCheckPhone } from "@/utils/myValidate";
 import { loginService } from "@/service/login";
 import { useRouter } from "vue-router";
-import Cookie from 'js-cookie';
+import { ENV_ICON } from "@/constant/index";
+import { CookieConfig } from '@/constant/config';
+
 export default defineComponent({
   setup() {
     // 设置背景颜色
@@ -200,7 +203,7 @@ export default defineComponent({
             duration: 1000,
             onClose: async () => {
               console.log("result.data.user", result.data.user)
-              Cookie.set("userInfo", JSON.stringify(result.data.user), { expires: 1 })
+              Cookies.set(CookieConfig.USER_INFO, JSON.stringify(result.data.user), { expires: 1 })
               router.push('/')
             }
           });

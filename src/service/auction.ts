@@ -7,5 +7,3 @@ export function getList(params?: any) {
     url: requestPackage('/Auction/GetListJson', params),
   });
 }
-
-// post

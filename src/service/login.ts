@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { requestPackage } from '@/utils/utils'
 
 // post
 export function loginService(params?: any) {
@@ -9,5 +8,3 @@ export function loginService(params?: any) {
     data: params
   });
 }
-
-// post
