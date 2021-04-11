@@ -134,7 +134,7 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const params = {
-          code: "2067"
+          SubTypeCode: "2067"
         }
         const res = await getDicList(params);
         state.dicList = res.data.data;

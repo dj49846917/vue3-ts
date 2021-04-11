@@ -19,5 +19,5 @@ export interface DicType {
 
 // 数据字典入参
 export interface DicParams {
-  code?: string
+  SubTypeCode?: string
 }

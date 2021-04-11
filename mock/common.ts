@@ -5,7 +5,7 @@ const comDic = {
   url: '/Home/GetCommonDicList',
   method: 'get',
   response: ({ query }) => {
-    console.log("query", query.code)
+    console.log("query", query.SubTypeCode)
     // 数据源
     const arr = [{
       "DicCode": 1000001,
@@ -1561,11 +1561,11 @@ const comDic = {
       "ModifyDate": "/Date(1609404885343)/"
     }]
     let newArr = []
-    if (!query.code) {
+    if (!query.SubTypeCode) {
       newArr = arr
     }
-    if (query.code) {
-      const splitArr = query.code.split(",")
+    if (query.SubTypeCode) {
+      const splitArr = query.SubTypeCode.split(",")
       splitArr.forEach((item: number) => {
         arr.forEach(it => {
           if (it.SubTypeCode === Number(item)) {

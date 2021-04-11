@@ -15,70 +15,38 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="item in list" :key="item.AuctionProjectID">
             <td class="v-m">
               <img
                 class="p-img fl mr10 col-lg-3"
-                src="content/uploads/1.jpg"
+                :src="item.Image"
                 width="60"
                 alt=""
               />
-              <a href="" class="fl block col-lg-8 textL title" target="_blank"
-                >关于对刘XX的债权转让</a
+              <router-link
+                :to="'/auction/detail?ID=' + item.AuctionProjectID"
+                class="fl block col-lg-8 textL title"
+                >{{ item.NoticeTitle }}</router-link
               >
             </td>
             <td class="">
-              <div class="t-l textC"><span class="p-price">3000</span> 元</div>
+              <div class="t-l textC">
+                <span class="p-price">{{ item.EnteryFeeParse }}</span> 元
+              </div>
             </td>
-            <td class="v-m"><div class="t-l">2020.12.24 10:00</div></td>
-
-            <td class="v-m red">已缴纳</td>
-            <td class="v-m operate">
-              <router-link class="blue" to="/personal/entrydetail">查看保证金</router-link><br />
-            </td>
-          </tr>
-          <tr>
             <td class="v-m">
-              <img
-                class="p-img fl mr10 col-lg-3"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-              <a href="" class="fl block col-lg-8 textL title" target="_blank"
-                >关于对刘XX的债权转让</a
-              >
+              <div class="t-l">{{ item.PayDateParse }}</div>
             </td>
-            <td class="">
-              <div class="t-l textC"><span class="p-price">3000</span> 元</div>
-            </td>
-            <td class="v-m"><div class="t-l">2020.12.24 10:00</div></td>
 
-            <td class="v-m red">已缴纳</td>
-            <td class="v-m operate">
-              <router-link class="blue" to="/personal/entrydetail">查看保证金</router-link><br />
-            </td>
-          </tr>
-          <tr>
             <td class="v-m">
-              <img
-                class="p-img fl mr10 col-lg-3"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-              <a href="" class="fl block col-lg-8 textL title" target="_blank"
-                >石狮市世茂摩天城I-S-01幢商铺39单元</a
-              >
+              <span class="red" v-if="(item.ReFundID != null && item.ReFundID > 0)">{{ item.EntryStatusParse }}</span>
+              <span v-else-if="item.EntryStatus == 2069001">{{ item.EntryStatusParse }}</span>
+              <span class="blue" v-else>{{ item.EntryStatusParse }}</span>
             </td>
-            <td class="">
-              <div class="t-l textC"><span class="p-price">3000</span> 元</div>
-            </td>
-            <td class="v-m"><div class="t-l">2020.12.24 10:00</div></td>
-
-            <td class="v-m">已释放</td>
             <td class="v-m operate">
-              <router-link class="blue" to="/personal/entrydetail">查看保证金</router-link><br />
+              <router-link class="blue" :to="'/personal/entryDetail?EntryID=' + item.EntryID"
+                >查看保证金</router-link
+              ><br />
             </td>
           </tr>
         </tbody>
@@ -99,12 +67,51 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import { entryList } from "@/service/personal";
+import { number_format, parseDate } from "@/utils/utils";
+import moment from "moment";
+export default defineComponent({
   setup() {
-    return {};
+    let state = reactive({
+      list: [],
+    });
+    onMounted(async () => {
+      // 获取数据字典
+      try {
+        const param = {
+          index: 1,
+        };
+        const res = await entryList(param);
+        res.data.data.Value.forEach((item) => {
+          // 保证金
+          item.EnteryFeeParse = number_format(item.EnteryFee, 2);
+          // 缴纳时间
+          item.PayDateParse = moment(Number(parseDate(item.PayDate))).format(
+            "yyyy-MM-DD HH:MM:ss"
+          );
+          // 状态
+          if (item.ReFundID != null && item.ReFundID > 0) {
+            item.EntryStatusParse = "已释放";
+          } else if (item.EntryStatus === 2069001) {
+            item.EntryStatusParse = "未缴纳";
+          } else {
+            item.EntryStatusParse = "已缴纳";
+          }
+        });
+        console.log("res", res);
+        state.list = res.data.data.Value;
+      } catch (error) {
+        console.log("请求错误");
+      }
+    });
+
+    return {
+      ...toRefs(state),
+    };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

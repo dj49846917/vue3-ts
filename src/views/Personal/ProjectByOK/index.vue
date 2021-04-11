@@ -14,32 +14,30 @@
           </tr>
         </thead>
       </table>
-      <table class="mt20" width="100%">
+      <table class="mt20" width="100%" v-for="item in list" :key="item.AuctionProjectID">
         <thead>
           <tr>
-            <th class="textL" width="100%" colspan="5">
-              预计结束时间：2021-1-15 10:00
-            </th>
+            <th class="textL" width="100%" colspan="5">结束时间：<span class="endTime">{{ item.ActualBidEndDateParse }}</span></th>
           </tr>
         </thead>
         <tbody>
           <tr class="top">
             <td class="v-m" width="35%" rowspan="3">
-              <a href="">
+              <router-link :to="'/auction/detail?ID=' + item.AuctionProjectID">
                 <img
                   class="p-img mr10 fl col-lg-4"
-                  src="content/uploads/1.jpg"
+                  :src="item.Image"
                   width="120"
                   alt=""
                 />
                 <p class="block textL fl title col-lg-8" target="_blank">
-                  关于对刘XX的债权转让
+                  {{ item.NoticeTitle }}
                 </p>
-              </a>
+              </router-link>
             </td>
             <td class="v-m" width="20%">
               <div class="t-l title textL">
-                房价：<span class="p-price">574600</span>元
+                房价：<span class="p-price">{{ item.MaxBidMoneyParse }}</span>元
               </div>
             </td>
             <td class="v-m red" width="15%">待支付</td>
@@ -50,157 +48,37 @@
           <tr class="top">
             <td class="v-m" width="15%">
               <div class="t-l title textL">
-                佣金：<span class="p-price">574600</span>元
+                佣金：<span class="p-price">{{ item.CommissionMoneyParse }}</span>元
               </div>
             </td>
-            <td class="v-m red" width="15%">待支付</td>
+            <td class="v-m" width="15%">
+              <span class="red" v-if="item.IsPayCommission === 0">待支付</span>
+              <span class="red" v-else>已支付</span>
+            </td>
             <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
+              <router-link v-if="item.IsPayCommission === 0" class="btn btn-danger" :to="'/auction/payByCommission?TransactionID=' + item.TransactionID + '&AuctionProjectID=' + item.AuctionProjectID + '&Money=' + item.PlatformServiceFee">立即付款</router-link>
             </td>
           </tr>
           <tr class="top">
             <td class="v-m" width="15%">
               <div class="t-l title textL">
-                软件服务费：<span class="p-price">574600</span>元
+                软件服务费：<span class="p-price">{{ item.PlatformServiceFeeParse }}</span>元
               </div>
             </td>
-            <td class="v-m red" width="15%">待支付</td>
+            <td class="v-m" width="15%">
+              <span class="red" v-if="item.IsPayPlatformServiceFee === 0">待支付</span>
+              <span class="red" v-else>已支付</span>
+            </td>
             <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
+              <router-link v-if="item.IsPayCommission === 0" class="btn btn-danger" :to="'/auction/payByPlatformServiceFee?TransactionID=' + item.TransactionID + '&AuctionProjectID=' + item.AuctionProjectID + '&Money=' + item.PlatformServiceFee">立即付款</router-link>
             </td>
           </tr>
           <tr class="bottom">
             <td class="v-m line_none" colspan="2" width="65%">
-              <div class="t-l col-lg-4 fl title textL">保证金：3000元</div>
+              <div class="t-l col-lg-4 fl title textL">保证金：{{ item.EnteryFeeParse }}元</div>
             </td>
-            <td class="v-m line_none" width="15%">已支付</td>
+            <td class="v-m line_none" width="15%">{{ item.PayDate ? "已支付" : "未支付" }}</td>
             <td class="v-m operate" width="15%" style="border-left: none"></td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="mt20" width="100%">
-        <thead>
-          <tr>
-            <th class="textL" width="100%" colspan="5">
-              预计结束时间：2021-1-15 10:00
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="top">
-            <td class="v-m" width="35%" rowspan="3">
-              <a href="">
-                <img
-                  class="p-img mr10 fl col-lg-4"
-                  src="content/uploads/1.jpg"
-                  width="120"
-                  alt=""
-                />
-                <p class="block textL fl title col-lg-8" target="_blank">
-                  关于对刘XX的债权转让
-                </p>
-              </a>
-            </td>
-            <td class="v-m" width="20%">
-              <div class="t-l title textL">
-                房价：<span class="p-price">574600</span>元
-              </div>
-            </td>
-            <td class="v-m red" width="15%">待支付</td>
-            <td class="v-m operate" width="20%">
-              <span class="btn btn-default" href="">线下支付</span>
-            </td>
-          </tr>
-          <tr class="top">
-            <td class="v-m" width="15%">
-              <div class="t-l title textL">
-                佣金：<span class="p-price">574600</span>元
-              </div>
-            </td>
-            <td class="v-m red" width="15%">待支付</td>
-            <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
-            </td>
-          </tr>
-          <tr class="top">
-            <td class="v-m" width="15%">
-              <div class="t-l title textL">
-                软件服务费：<span class="p-price">574600</span>元
-              </div>
-            </td>
-            <td class="v-m red" width="15%">待支付</td>
-            <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
-            </td>
-          </tr>
-          <tr class="bottom">
-            <td class="v-m line_none" colspan="2" width="65%">
-              <div class="t-l col-lg-4 fl title textL">保证金：3000元</div>
-            </td>
-            <td class="v-m line_none" width="15%">已支付</td>
-            <td class="v-m operate" width="15%" style="border-left: none"></td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="mt20" width="100%" style="display: none">
-        <thead>
-          <tr>
-            <th class="textL" width="100%" colspan="4">
-              预计结束时间：2021-1-15 10:00
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="top">
-            <td class="v-m" colspan="2" width="65%">
-              <img
-                class="p-img fl mr10 col-lg-2"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-              <a href="" class="fl block col-lg-6 textL title" target="_blank"
-                >关于对刘XX的债权转让</a
-              >
-              <div class="t-l col-lg-4 fr title textR">
-                佣金：<span class="p-price">574600</span>元
-              </div>
-            </td>
-            <td class="v-m red" width="15%">待支付</td>
-            <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="mt20" width="100%" style="display: none">
-        <thead>
-          <tr>
-            <th class="textL" width="100%" colspan="4">
-              预计结束时间：2021-1-15 10:00
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="top">
-            <td class="v-m" colspan="2" width="65%">
-              <img
-                class="p-img fl mr10 col-lg-2"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-              <a href="" class="fl block col-lg-6 textL title" target="_blank"
-                >关于对刘XX的债权转让</a
-              >
-              <div class="t-l col-lg-4 fr title textR">
-                软件服务费：<span class="p-price">574600</span>元
-              </div>
-            </td>
-            <td class="v-m red" width="15%">待支付</td>
-            <td class="v-m operate" width="20%">
-              <a class="btn btn-danger" href="">立即付款</a>
-            </td>
           </tr>
         </tbody>
       </table>
@@ -220,12 +98,54 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import { projectByOKList } from "@/service/personal";
+import { getDicList } from "@/service/common";
+import { number_format, parseDate } from "@/utils/utils";
+import moment from "moment";
+export default defineComponent({
   setup() {
-    return {};
+    let state = reactive({
+      list: [],
+      dicList: [],
+    });
+    onMounted(async () => {
+      // 获取数据字典
+      try {
+        const params = {
+          SubTypeCode: "2062,2063",
+        };
+        const dicRes = await getDicList(params);
+        const param = {
+          index: 1,
+        };
+        const res = await projectByOKList(param);
+        console.log("res", res)
+        res.data.data.Value.forEach(item => {
+          // 保证金
+          item.EnteryFeeParse = number_format(item.EnteryFee || 0, 2)
+          // 成交时间
+          item.ActualBidEndDateParse = moment(Number(parseDate(item.ActualBidEndDate))).format("yyyy-MM-DD HH:MM:ss")
+          // 房价
+          item.MaxBidMoneyParse = number_format(item.MaxBidMoney || 0, 2)
+          // 平台服务费
+          item.PlatformServiceFeeParse = number_format(item.PlatformServiceFee || 0, 2)
+          // 佣金
+          item.CommissionMoneyParse = number_format(String(item.MaxBidMoney * (Number(item.CommissionMoney) / 100)), 2)
+        });
+        state.list = res.data.data.Value;
+        state.dicList = dicRes.data.data;
+      } catch (error) {
+        console.log("请求错误");
+      }
+    });
+
+    return {
+      ...toRefs(state),
+    };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

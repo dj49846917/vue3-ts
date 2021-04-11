@@ -1,27 +1,61 @@
 import { DicType } from "@/types/types";
 
-/** 
- * param 将要转为URL参数字符串的对象 
- * key URL参数字符串的前缀 
- * encode true/false 是否进行URL编码,默认为true 
- *  
- * return URL参数字符串 
+/**
+ * 对象转url参数
+ * @param {*} data,对象
+ * @param {*} isPrefix,是否自动加上"?"
  */
-export function urlEncode(param: any, key: string, encode: boolean) {
-  if (param == null) return '';
-  var paramStr = '';
-  var t = typeof (param);
-  if (t == 'string' || t == 'number' || t == 'boolean') {
-    paramStr += '&' + key + '=' + ((encode == null || encode) ? encodeURIComponent(param) : param);
-  } else {
-    for (var i in param) {
-      var k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : i);
-      paramStr += urlEncode(param[i], k, encode);
-    }
+export function queryParams(data: {[propName: string]: any} = {}, isPrefix: boolean = true, arrayFormat = 'brackets') {
+  let prefix = isPrefix ? '?' : ''
+  let _result = []
+  if (['indices', 'brackets', 'repeat', 'comma'].indexOf(arrayFormat) == -1) arrayFormat = 'brackets';
+  for (let key in data) {
+      let value = data[key]
+      // 去掉为空的参数
+      if (['', undefined, null].indexOf(value) >= 0) {
+          continue;
+      }
+      // 如果值为数组，另行处理
+      if (value.constructor === Array) {
+          // e.g. {ids: [1, 2, 3]}
+          switch (arrayFormat) {
+              case 'indices':
+                  // 结果: ids[0]=1&ids[1]=2&ids[2]=3
+                  for (let i = 0; i < value.length; i++) {
+                      _result.push(key + '[' + i + ']=' + value[i])
+                  }
+                  break;
+              case 'brackets':
+                  // 结果: ids[]=1&ids[]=2&ids[]=3
+                  value.forEach(_value => {
+                      _result.push(key + '[]=' + _value)
+                  })
+                  break;
+              case 'repeat':
+                  // 结果: ids=1&ids=2&ids=3
+                  value.forEach(_value => {
+                      _result.push(key + '=' + _value)
+                  })
+                  break;
+              case 'comma':
+                  // 结果: ids=1,2,3
+                  let commaStr = "";
+                  value.forEach(_value => {
+                      commaStr += (commaStr ? "," : "") + _value;
+                  })
+                  _result.push(key + '=' + commaStr)
+                  break;
+              default:
+                  value.forEach(_value => {
+                      _result.push(key + '[]=' + _value)
+                  })
+          }
+      } else {
+          _result.push(key + '=' + value)
+      }
   }
-  return paramStr;
-};
-
+  return _result.length ? prefix + _result.join('&') : ''
+}
 /**
  * 
  * @param uri 接口路径
@@ -30,7 +64,7 @@ export function urlEncode(param: any, key: string, encode: boolean) {
  */
 export function requestPackage(uri: string, params: object) {
   if (JSON.stringify(params) !== "{}") {
-    return `${uri}?${urlEncode(params, "", true)}`
+    return `${uri}${queryParams(params)}`
   }
   return uri
 }
@@ -68,6 +102,7 @@ export function dicCodeToDicName(arr: DicType, code: number) {
       break
     }
   }
+  console.log("word", word)
   return word
 }
 
@@ -78,7 +113,7 @@ export function dicCodeToDicName(arr: DicType, code: number) {
     * dec_point：小数点符号
     * thousands_sep：千分位符号
 */
-export function number_format(num: string, decimals: number, dec_point: string, thousands_sep: string) {
+export function number_format(num: string, decimals: number, dec_point?: string, thousands_sep?: string) {
   num = (num + '').replace(/[^0-9+-Ee.]/g, '');
   var n = !isFinite(+num) ? 0 : +num,
     prec = !isFinite(+decimals) ? 2 : Math.abs(decimals),
