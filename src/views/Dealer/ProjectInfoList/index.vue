@@ -300,12 +300,23 @@ import { getList } from "@/service/auction";
 import { getDicList } from "@/service/common";
 import { dicCodeToDicName, number_format, parseDate } from "@/utils/utils";
 import moment from "moment";
+import { DicType } from "@/types/types";
+
+interface modelFormProp {
+  ProjectName: string | undefined,
+  ReleaseStatus: number | null,
+  ProjectStatus: number | null,
+  StartDateBeg: string | undefined,
+  StartDateEnd: string | undefined,
+  list: any[],
+  dicList: DicType[],
+}
 export default defineComponent({
   setup() {
     // form对象
     const ruleForm = ref<typeof ElForm>();
     // 表单对象
-    const modelForm = reactive({
+    const modelForm:modelFormProp = reactive({
       ProjectName: "",
       ReleaseStatus: null,
       ProjectStatus: null,
