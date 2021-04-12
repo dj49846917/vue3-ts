@@ -230,49 +230,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$lineHeight: 50px;
 :deep(.el-form-item__content) {
   margin-left: 0 !important;
   width: 90%;
-  // line-height: 50px;
 }
-// :deep(.el-input) {
-//   line-height: 50px;
-// }
 :deep(.el-input__prefix) {
   left: 1rem;
   color: #666;
 }
 :deep(.el-input__inner) {
-  height: $lineHeight;
-  line-height: $lineHeight;
-  border: 1px solid #ddd;
-  background: #fafafa;
-  color: #000;
   padding-left: 4rem !important;
-  &::placeholder {
-    color: #999;
-  }
-  &::-webkit-input-placeholder {
-    /* WebKit browsers 适配谷歌 */
-    color: #999;
-  }
-  &:-moz-placeholder {
-    /* Mozilla Firefox 4 to 18 适配火狐 */
-    color: #999;
-  }
-  &::-moz-placeholder {
-    /* Mozilla Firefox 19+ 适配火狐 */
-    color: #999;
-  }
-  &:-ms-input-placeholder {
-    /* Internet Explorer 10+  适配ie*/
-    color: #999;
-  }
-}
-.iconStyle {
-  line-height: $lineHeight;
-  font-size: 20px;
 }
 .save {
   width: 100%;
@@ -282,13 +249,6 @@ $lineHeight: 50px;
 }
 .form-item-nomargin {
   margin-bottom: 0;
-}
-.codeBtn {
-  line-height: $lineHeight;
-}
-.codeBtn2 {
-  cursor: pointer;
-  line-height: $lineHeight;
 }
 :deep(.form-item-code .el-input__inner) {
   padding-right: 150px;

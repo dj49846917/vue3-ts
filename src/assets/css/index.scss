@@ -1,0 +1,37 @@
+$lineHeight: 40px;
+
+.el-button--danger:focus, .el-button--danger:hover {
+    background: #c7171e;
+    border-color: #c7171e;
+    color: #FFF;
+  }
+  .el-button--danger {
+    background: #c7171e;
+    border-color: #c7171e;
+  }
+.el-input__inner {
+  height: $lineHeight;
+  line-height: $lineHeight;
+  border: 1px solid #ddd;
+  background: #fafafa;
+  color: #000;
+  &::placeholder {
+    color: #999;
+  }
+  &::-webkit-input-placeholder {
+    /* WebKit browsers 适配谷歌 */
+    color: #999;
+  }
+  &:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 适配火狐 */
+    color: #999;
+  }
+  &::-moz-placeholder {
+    /* Mozilla Firefox 19+ 适配火狐 */
+    color: #999;
+  }
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10+  适配ie*/
+    color: #999;
+  }
+}

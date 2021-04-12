@@ -143,7 +143,12 @@ const routes = [
         component: () => import('@/views/Dealer/NoticeInfo/index.vue')
       },
     ]
-  }
+  },
+  { // 设置404页面
+    path: '/:catchAll(.*)',
+    name: '404',
+    component: () => import('@/views/ErrorPage.vue')
+  },
 ]
 
 export default routes

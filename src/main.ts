@@ -7,6 +7,7 @@ import 'element-plus/lib/theme-chalk/index.css'
 import '@/assets/css/bootstrap.css'
 import '@/assets/css/rt.css'
 import '@/assets/css/iconfont.css'
+import '@/assets/css/index.scss'
 import axios from 'axios'
 import '@/utils/permission'
 

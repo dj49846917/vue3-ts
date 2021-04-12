@@ -553,15 +553,7 @@ header.top{padding: 0.5em 0;background: #f6f6f6}
 
 .pm_xz2 p{text-indent: 2em;line-height: 35px;font-size: 16px;text-align: justify;}
 .pm_body .pm_info p{font-size: 16px;}
-.el-button--danger:focus, .el-button--danger:hover {
-  background: #c7171e;
-  border-color: #c7171e;
-  color: #FFF;
-}
-.el-button--danger {
-  background: #c7171e;
-  border-color: #c7171e;
-}
+
 
 
 

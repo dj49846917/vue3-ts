@@ -5,38 +5,76 @@
     </div>
     <div class="manager_main">
       <div class="manager_filter">
-        <ul class="ofw form-group has-feedback">
-          <li class="fl form_value mb10">
-            <p class="fl title">标的物名称:</p>
-            <input
-              type="text"
-              class="fl"
-              maxlength="30"
-              placeholder="请输入"
-              name=""
-            />
-          </li>
-          <li class="fl form_value mb10">
-            <p class="fl title">竞拍时间:</p>
-            <select class="fl">
-              <option value="请选择">请选择</option>
-            </select>
-            <p class="fl title">至:</p>
-            <select class="fl">
-              <option value="请选择">请选择</option>
-            </select>
-          </li>
-          <li class="fl form_value mb10">
-            <p class="fl title">拍卖状态:</p>
-            <select class="fl">
-              <option value="请选择">请选择</option>
-            </select>
-          </li>
-        </ul>
-        <div class="btn_box mt10">
-          <a href="">查询</a>
-          <a class="reset" href="">重置</a>
-        </div>
+        <el-form
+          :model="modelForm"
+          status-icon
+          :rules="rules"
+          ref="ruleForm"
+          label-width="90px"
+          class="demo-ruleForm"
+        >
+          <el-form-item
+            label="标的物名称:"
+            prop="ProjectName"
+            class="form_item"
+          >
+            <el-input
+              v-model="modelForm.ProjectName"
+              placeholder="请输入标的物名称"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="发布状态:"
+            prop="ReleaseStatus"
+            class="form_item"
+          >
+            <el-select
+              clearable
+              v-model="modelForm.ReleaseStatus"
+              placeholder="请选择发布状态"
+            >
+              <el-option label="区域一" value="shanghai"></el-option>
+              <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="拍卖状态:"
+            prop="ProjectStatus"
+            class="form_item"
+          >
+            <el-select
+              clearable
+              v-model="modelForm.ProjectStatus"
+              placeholder="请选择拍卖状态"
+            >
+              <el-option label="区域一" value="shanghai"></el-option>
+              <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="竞拍时间" class="form_item other">
+            <el-col style="width: 200px">
+              <el-date-picker
+                type="date"
+                placeholder="请选择"
+                v-model="modelForm.StartDateBeg"
+                style="width: 100%"
+              ></el-date-picker>
+            </el-col>
+            <el-col style="margin: 0 5px">至</el-col>
+            <el-col style="width: 200px">
+              <el-date-picker
+                type="date"
+                placeholder="请选择"
+                v-model="modelForm.StartDateEnd"
+                style="width: 100%"
+              ></el-date-picker>
+            </el-col>
+          </el-form-item>
+          <el-form-item class="btnOther">
+            <el-button type="danger" @click="submitForm()">提交</el-button>
+            <el-button type="danger" plain @click="resetForm()">重置</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
     <div class="manager_list mt10">
@@ -53,371 +91,92 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
+          <tr v-for="(item, index) in modelForm.list" :key="item.AuctionProjectID">
             <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
+              <div class="t-l">{{ item.ProjectCode }}</div>
             </td>
             <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
+              <img class="p-img" :src="item.Image" style="width: 60px" alt="" />
             </td>
             <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
+              <router-link
+                :to="'/Auction/Detail?ID=' + item.AuctionProjectID"
+                class="blue"
+                >{{ item.ProjectName }}</router-link
+              >
+            </td>
+            <td class="v-m">
+              <div class="t-l">
+                {{ item.BidStartDateParse }} - {{ item.BidEndDateParse }}
+              </div>
             </td>
             <td class="">
               <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
+                保证金：<span class="p-price">{{ item.EnteryFeeParse }}</span>
+                元
               </div>
               <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
+                起拍价：<span class="p-price">{{
+                  item.StartingPriceParse
+                }}</span>
+                元<br />
               </div>
               <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
+                最小加价幅度：<span class="p-price">{{
+                  item.BidIncrementParse
+                }}</span>
+                元<br />
               </div>
               <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
+                延时结束：<span class="p-price"
+                  >{{ item.DelayPeriod }}分钟</span
+                >
               </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
+              <!-- 成交情况 -->
+              <div
+                class="deal_detail blue"
+                v-if="
+                  item.ReleaseStatus === 2063004 &&
+                  item.ProjectStatus === 2062003 &&
+                  item.TransactionInfo
+                "
+                @mouseenter="enterDeal(index)"
+                @mouseleave="leaveDeal(index)"
+              >
+                成交详情{{ item.isDealShow }}<i class="iconfont icon-right"></i>
+                <div class="a-m-tip endContent" v-show="item.isDealShow">
+                  <i><s></s></i>
+                  <div class="tip-wrap">
+                    <p>
+                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;号: </label
+                      ><span>{{ item.TransactionInfo.BidNum }}</span>
+                    </p>
+                    <p>
+                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;人: </label
+                      ><span>{{ item.TransactionInfo.UserName }}</span>
+                    </p>
+                    <p>
+                      <label>身份证号: </label
+                      ><span>{{ item.TransactionInfo.IDCard }}</span>
+                    </p>
+                    <p>
+                      <label>成&nbsp;&nbsp;交&nbsp;&nbsp;价: </label
+                      ><span>{{ item.TransactionInfo.TranscationFee }}</span>
+                    </p>
+                    <p>
+                      <label>成交时间: </label
+                      ><span>{{
+                        item.TransactionInfo.TranscationTimeParse
+                      }}</span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </td>
             <td class="v-m">正在进行</td>
             <td class="v-m operate">
               <a class="blue" href="">查看</a><br />
               <a class="blue" href="">复制拍品</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m">未开始</td>
-            <td class="v-m operate">
-              <a class="blue" href="">查看</a><br />
-              <a class="blue" href="">复制拍品</a><br />
-              <a class="blue" href="">撤回</a><br />
-              <a class="blue" href="">中止</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m">
-              中止
-              <div class="deal_detail blue">
-                理由<i class="iconfont icon-right"></i>
-                <div class="a-m-tip a-m-tip2">
-                  <i><s></s></i>
-                  <div class="tip-wrap">
-                    中止理由:价格没有优势，不算优质房源
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="v-m operate"><a class="blue" href="">查看</a><br /></td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m">已成交</td>
-            <td class="v-m operate">
-              <a class="blue" href="">继续处置</a><br />
-              <a class="blue" href="">复制拍品</a><br />
-              <a class="blue" href="">查看费用</a><br />
-              <a class="blue" href="">生成完整报告PDF</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-              <div class="deal_detail blue">
-                成交详情<i class="iconfont icon-right"></i>
-                <div class="a-m-tip">
-                  <i><s></s></i>
-                  <div class="tip-wrap">
-                    <p>
-                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;号: </label
-                      ><span>C3643</span>
-                    </p>
-                    <p>
-                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;人: </label
-                      ><span>卢坤</span>
-                    </p>
-                    <p>
-                      <label>身份证号: </label><span>510212198207126712</span>
-                    </p>
-                    <p>
-                      <label>成&nbsp;&nbsp;交&nbsp;&nbsp;价: </label
-                      ><span>25000</span>
-                    </p>
-                    <p>
-                      <label>成交时间: </label><span>2020.12.25 10:14</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="v-m">已结束待确认</td>
-            <td class="v-m operate">
-              <a class="blue" href="">确认成交</a><br />
-              <a class="blue" href="">交易未履行</a><br />
-              <a class="blue" href="">复制拍品</a><br />
-              <a class="blue" href="">查看费用</a><br />
-              <a class="blue" href="">生成完整报告PDF</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">5123</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m">
-              撤回
-              <div class="deal_detail blue">
-                理由<i class="iconfont icon-right"></i>
-                <div class="a-m-tip a-m-tip2">
-                  <i><s></s></i>
-                  <div class="tip-wrap">
-                    撤回理由:价格没有优势，不算优质房源
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="v-m operate">
-              <a class="blue" href="">查看</a><br />
-              <a class="blue" href="">复制拍品</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">54523</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank">关于对刘XX的债权转让</a>
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m">已流拍</td>
-            <td class="v-m operate">
-              <a class="blue" href="">继续处置</a><br />
-              <a class="blue" href="">查看费用</a><br />
-            </td>
-          </tr>
-          <tr>
-            <td class="v-m"><div class="t-l">4523</div></td>
-            <td class="v-m">
-              <img
-                class="p-img"
-                src="content/uploads/1.jpg"
-                width="60"
-                alt=""
-              />
-            </td>
-            <td class="v-m">
-              <a href="" class="blue" target="_blank"
-                >北碚区北温泉街道金华路385号</a
-              >
-            </td>
-            <td class="v-m">
-              <div class="t-l">2020.12.24 10:00 -2020.12.25 10:00</div>
-            </td>
-            <td class="">
-              <div class="t-l">
-                保证金：<span class="p-price">3000</span> 元
-              </div>
-              <div class="t-l">
-                起拍价：<span class="p-price">32000</span> 元<br />
-              </div>
-              <div class="t-l">
-                最小加价幅度：<span class="p-price">1000</span> 元<br />
-              </div>
-              <div class="t-l">
-                延时结束：<span class="p-price">延时5分钟</span>
-              </div>
-              <div class="t-l">
-                保留价：<span class="p-price">32000</span> 元
-              </div>
-            </td>
-            <td class="v-m red">待发布</td>
-            <td class="v-m operate">
-              <a class="blue" href="">去发布</a><br />
-              <a class="blue" href="">编辑标的物</a><br />
-              <a class="blue" href="">删除</a><br />
             </td>
           </tr>
         </tbody>
@@ -438,13 +197,146 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { ElForm } from "element-plus";
+import { defineComponent, reactive, ref, unref, toRefs, onMounted } from "vue";
+import { getList } from "@/service/auction";
+import { getDicList } from "@/service/common";
+import { number_format, parseDate } from "@/utils/utils";
+import moment from "moment";
+export default defineComponent({
   setup() {
-    return {};
+    // form对象
+    const ruleForm = ref<typeof ElForm>();
+    // 表单对象
+    const modelForm = reactive({
+      ProjectName: "",
+      ReleaseStatus: null,
+      ProjectStatus: null,
+      StartDateBeg: "",
+      StartDateEnd: "",
+      list: [],
+      dicList: [],
+    });
+    // 规则
+    const rules = {
+      ProjectName: [
+        { max: 30, message: "最多只能输入30个字符", trigger: "blur" },
+      ],
+    };
+
+    onMounted(async () => {
+      try {
+        const params = {
+          index: 1,
+          page: 10,
+        };
+        const res = await getList(params);
+        const param = {
+          SubTypeCode: "2062,2063,2064",
+        };
+        const dicRes = await getDicList(param);
+        console.log("dicRes", dicRes);
+        res.data.data.forEach((item) => {
+          // 开始时间
+          item.BidStartDateParse = moment(
+            Number(parseDate(item.BidStartDate))
+          ).format("yyyy-MM-DD HH:mm:ss");
+          // 结束时间
+          item.BidEndDateParse = moment(
+            Number(parseDate(item.BidEndDate))
+          ).format("yyyy-MM-DD HH:mm:ss");
+          // 保证金
+          item.EnteryFeeParse = number_format(item.EnteryFee || 0, 2);
+          // 起拍价
+          item.StartingPriceParse = number_format(item.StartingPrice || 0, 2);
+          // 最小加价幅度
+          item.BidIncrementParse = number_format(item.BidIncrement || 0, 2);
+          // 是否展示成交信息
+          item.isDealShow = false
+          // 有成交信息
+          if (item.TransactionInfo) {
+            item.TransactionInfo.TranscationTimeParse = moment(
+              Number(parseDate(item.TransactionInfo.TranscationTime))
+            ).format("yyyy-MM-DD HH:mm:ss");
+          }
+        });
+        modelForm.list = res.data.data;
+        modelForm.dicList = dicRes.data.data;
+      } catch (error) {
+        console.log("请求错误");
+      }
+    });
+
+    // 查询
+    async function submitForm() {
+      const form = unref(ruleForm);
+      if (!form) return;
+      try {
+        await form.validate();
+        console.log("modelForm", modelForm.ProjectName);
+      } catch (error) {}
+    }
+
+    // 进入
+    function enterDeal(index:number) {
+      modelForm.list[index].isDealShow = true
+      console.log("modelForm.list[index].isDealShow", modelForm.list[index].isDealShow)
+    }
+
+    // 退出
+    function leaveDeal(index:number) {
+      modelForm.list[index].isDealShow = false
+      console.log("modelForm.list[index]", modelForm.list[index].isDealShow)
+    }
+    return {
+      ruleForm,
+      modelForm,
+      rules,
+      submitForm,
+      enterDeal,
+      leaveDeal
+    };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-form-item::after) {
+  clear: none;
+}
+:deep(.el-form-item__content::after) {
+  clear: none;
+}
+:deep(.el-form-item__content) {
+  width: 200px;
+}
+.form_item {
+  display: inline-block;
+}
+.manager_main {
+  padding: 10px 0;
+}
+:deep(.manager_main form label) {
+  padding: 0 6px 0 0;
+}
+:deep(.other .el-form-item__content) {
+  width: auto;
+}
+:deep(.el-form-item) {
+  margin-bottom: 16px;
+}
+:deep(.el-input__inner) {
+  padding: 0 30px 0 15px;
+}
+:deep(.el-input--prefix .el-input__inner) {
+  padding: 0 30px;
+}
+:deep(.btnOther .el-form-item__content) {
+  margin: 0 auto !important;
+  text-align: center;
+}
+:deep(.el-button) {
+  width: 80px;
+}
 </style>

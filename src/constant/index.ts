@@ -21,6 +21,7 @@ import liuli from '@/assets/uploads/liuli.jpg'
 import login_img from '@/assets/images/login_img.png'
 import pro from '@/assets/images/pro.png'
 import logo_user from '@/assets/images/logo_user.png'
+import no_pic from '@/assets/images/404.png'
 export const ENV_ICON = {
   logo,
   arrow_down,
@@ -45,4 +46,5 @@ export const ENV_ICON = {
   login_img,
   pro,
   logo_user,
+  no_pic
 }
