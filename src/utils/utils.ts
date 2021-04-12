@@ -102,7 +102,6 @@ export function dicCodeToDicName(arr: DicType, code: number) {
       break
     }
   }
-  console.log("word", word)
   return word
 }
 

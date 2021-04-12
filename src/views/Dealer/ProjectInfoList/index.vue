@@ -91,7 +91,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in modelForm.list" :key="item.AuctionProjectID">
+          <tr
+            v-for="(item, index) in modelForm.list"
+            :key="item.AuctionProjectID"
+          >
             <td class="v-m">
               <div class="t-l">{{ item.ProjectCode }}</div>
             </td>
@@ -99,11 +102,7 @@
               <img class="p-img" :src="item.Image" style="width: 60px" alt="" />
             </td>
             <td class="v-m">
-              <router-link
-                :to="'/Auction/Detail?ID=' + item.AuctionProjectID"
-                class="blue"
-                >{{ item.ProjectName }}</router-link
-              >
+              <router-link :to="'/Auction/Detail?ID=' + item.AuctionProjectID" class="blue">{{ item.ProjectName }}</router-link>
             </td>
             <td class="v-m">
               <div class="t-l">
@@ -112,20 +111,13 @@
             </td>
             <td class="">
               <div class="t-l">
-                保证金：<span class="p-price">{{ item.EnteryFeeParse }}</span>
-                元
+                保证金：<span class="p-price">{{ item.EnteryFeeParse }}</span>元
               </div>
               <div class="t-l">
-                起拍价：<span class="p-price">{{
-                  item.StartingPriceParse
-                }}</span>
-                元<br />
+                起拍价：<span class="p-price">{{ item.StartingPriceParse }}</span>元<br />
               </div>
               <div class="t-l">
-                最小加价幅度：<span class="p-price">{{
-                  item.BidIncrementParse
-                }}</span>
-                元<br />
+                最小加价幅度：<span class="p-price">{{ item.BidIncrementParse }}</span>元<br />
               </div>
               <div class="t-l">
                 延时结束：<span class="p-price"
@@ -143,40 +135,144 @@
                 @mouseenter="enterDeal(index)"
                 @mouseleave="leaveDeal(index)"
               >
-                成交详情{{ item.isDealShow }}<i class="iconfont icon-right"></i>
+                成交详情<i class="iconfont icon-right"></i>
                 <div class="a-m-tip endContent" v-show="item.isDealShow">
                   <i><s></s></i>
                   <div class="tip-wrap">
                     <p>
-                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;号: </label
-                      ><span>{{ item.TransactionInfo.BidNum }}</span>
+                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;号: </label>
+                      <span>{{ item.TransactionInfo.BidNum }}</span>
                     </p>
                     <p>
-                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;人: </label
-                      ><span>{{ item.TransactionInfo.UserName }}</span>
+                      <label>竞&nbsp;&nbsp;买&nbsp;&nbsp;人: </label>
+                      <span>{{ item.TransactionInfo.UserName }}</span>
                     </p>
                     <p>
-                      <label>身份证号: </label
-                      ><span>{{ item.TransactionInfo.IDCard }}</span>
+                      <label>身份证号: </label>
+                      <span>{{ item.TransactionInfo.IDCard }}</span>
                     </p>
                     <p>
-                      <label>成&nbsp;&nbsp;交&nbsp;&nbsp;价: </label
-                      ><span>{{ item.TransactionInfo.TranscationFee }}</span>
+                      <label>成&nbsp;&nbsp;交&nbsp;&nbsp;价: </label>
+                      <span>{{ item.TransactionInfo.TranscationFee }}</span>
                     </p>
                     <p>
-                      <label>成交时间: </label
-                      ><span>{{
-                        item.TransactionInfo.TranscationTimeParse
-                      }}</span>
+                      <label>成交时间: </label>
+                      <span>{{ item.TransactionInfo.TranscationTimeParse }}</span>
                     </p>
                   </div>
                 </div>
               </div>
             </td>
-            <td class="v-m">正在进行</td>
+            <!-- 状态 -->
+            <td class="v-m">
+              <!-- 发布状态不为审核通过 -->
+              <div class="red" v-if="item.ReleaseStatus !== 2063004">
+                {{ item.ReleaseStatusNameParse }}
+              </div>
+              <!-- 发布状态为审核通过，并且项目状态为已撤销 -->
+              <div v-else-if="item.ReleaseStatus === 2063004 &&item.ProjectStatus === 2062005">
+                {{ item.ProjectStatusNameParse }}
+                <div class="deal_detail blue endBtn">理由
+                  <i class="iconfont icon-right"></i>
+                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                    <i><s></s></i>
+                    <div class="tip-wrap">撤回理由:
+                      <span class="returnReasonTip">{{ item.ProjectStatusDescription }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 发布状态为审核通过，并且项目状态为已终止 -->
+              <div v-else-if="item.ReleaseStatus === 2063004 && item.ProjectStatus === 2062006">
+                {{ item.ProjectStatusNameParse }}
+                <div class="deal_detail blue endBtn">理由
+                  <i class="iconfont icon-right"></i>
+                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                    <i><s></s></i>
+                    <div class="tip-wrap">
+                      终止理由: {{ item.ProjectStatusDescription }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 发布状态为审核通过，并且项目状态为已成交,成交状态为未履行 -->
+              <div v-else-if="item.ReleaseStatus === 2063004 && item.ProjectStatus === 2062003 && item.CompleteDealStatus === 2064001">
+                {{ item.ProjectStatusNameParse }}
+                <div class="deal_detail blue endBtn">理由
+                  <i class="iconfont icon-right"></i>
+                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                    <i><s></s></i>
+                    <div class="tip-wrap">
+                      交易未履行理由: {{ item.CompleteDealDescription }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 发布状态为审核通过，并且项目状态为已成交,成交状态为待确认 -->
+              <div v-else-if="item.ReleaseStatus === 2063004 && item.ProjectStatus === 2062003">{{ item.CompleteDealStatusNameParse }} </div>
+              <div v-else>{{ item.ProjectStatusNameParse }}</div>
+            </td>
             <td class="v-m operate">
-              <a class="blue" href="">查看</a><br />
-              <a class="blue" href="">复制拍品</a><br />
+              <span 
+                class="blue btnStyle" 
+                @click="editProject(item.AuctionProjectID)" 
+                v-if="item.ReleaseStatus === 2063001 || item.ReleaseStatus === 2063002 || item.ReleaseStatus === 2063005"
+              >编辑标的物</span>
+              <span 
+                class="blue btnStyle" 
+                @click="watchProject(item.AuctionProjectID)"
+                v-if="item.ReleaseStatus === 2063001 || item.ReleaseStatus === 2063002 || item.ReleaseStatus === 2063005 || item.ProjectStatus === 2062001 || item.ProjectStatus === 2062002 || item.ProjectStatus === 2062005 || item.ProjectStatus === 2062006"
+              >查看</span>
+              <span 
+                class="blue btnStyle" 
+                @click="deleteProject(item.AuctionProjectID)"
+                v-if="item.ReleaseStatus === 2063001 || item.ReleaseStatus === 2063002 || item.ReleaseStatus === 2063005 || item.ReleaseStatus === 2063003"
+              >删除</span>
+              <span 
+                class="blue btnStyle" 
+                @click="publishProject(item.AuctionProjectID)"
+                v-if="item.ReleaseStatus === 2063002"
+              >去发布</span>
+              <span 
+                class="blue btnStyle" 
+                @click="returnProject(item.AuctionProjectID)"
+                v-if="item.ReleaseStatus === 2063003 || item.ProjectStatus === 2062001"
+              >撤回</span>
+              <span 
+                class="blue btnStyle" 
+                @click="copyProject(item.AuctionProjectID)"
+                v-if="item.ProjectStatus === 2062001 || item.ProjectStatus === 2062002 || item.ProjectStatus === 2062004 || item.ProjectStatus === 2062005"
+              >复制拍品</span>
+              <span 
+                class="blue btnStyle" 
+                @click="offProject(item.AuctionProjectID)"
+                v-if="item.ProjectStatus === 2062001"
+              >中止</span>
+              <span 
+                class="blue btnStyle" 
+                @click="copyProject(item.AuctionProjectID)"
+                v-if="item.ProjectStatus === 2062004"
+              >继续处置</span>
+              <span 
+                class="blue btnStyle" 
+                @click="dealProject(item.AuctionProjectID)"
+                v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
+              >确认成交</span>
+              <span 
+                class="blue btnStyle" 
+                @click="dealNotProject(item.AuctionProjectID)"
+                v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
+              >交易未履行</span>
+              <span 
+                class="blue btnStyle"
+                @click="dealNotProject(item.AuctionProjectID)"
+                v-if="(item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064001)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064003))"
+              >查看费用</span>
+              <span 
+                class="blue btnStyle" 
+                @click="getUploadPDF(item.AuctionProjectID)"
+                v-if="(item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064001)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064003))"
+              >生成完整报告PDF</span>
             </td>
           </tr>
         </tbody>
@@ -202,7 +298,7 @@ import { ElForm } from "element-plus";
 import { defineComponent, reactive, ref, unref, toRefs, onMounted } from "vue";
 import { getList } from "@/service/auction";
 import { getDicList } from "@/service/common";
-import { number_format, parseDate } from "@/utils/utils";
+import { dicCodeToDicName, number_format, parseDate } from "@/utils/utils";
 import moment from "moment";
 export default defineComponent({
   setup() {
@@ -236,16 +332,12 @@ export default defineComponent({
           SubTypeCode: "2062,2063,2064",
         };
         const dicRes = await getDicList(param);
-        console.log("dicRes", dicRes);
-        res.data.data.forEach((item) => {
+        console.log("res", res);
+        res.data.data.forEach(item => {
           // 开始时间
-          item.BidStartDateParse = moment(
-            Number(parseDate(item.BidStartDate))
-          ).format("yyyy-MM-DD HH:mm:ss");
+          item.BidStartDateParse = moment(Number(parseDate(item.BidStartDate))).format("yyyy-MM-DD HH:mm:ss");
           // 结束时间
-          item.BidEndDateParse = moment(
-            Number(parseDate(item.BidEndDate))
-          ).format("yyyy-MM-DD HH:mm:ss");
+          item.BidEndDateParse = moment(Number(parseDate(item.BidEndDate))).format("yyyy-MM-DD HH:mm:ss");
           // 保证金
           item.EnteryFeeParse = number_format(item.EnteryFee || 0, 2);
           // 起拍价
@@ -253,13 +345,17 @@ export default defineComponent({
           // 最小加价幅度
           item.BidIncrementParse = number_format(item.BidIncrement || 0, 2);
           // 是否展示成交信息
-          item.isDealShow = false
+          item.isDealShow = false;
           // 有成交信息
           if (item.TransactionInfo) {
-            item.TransactionInfo.TranscationTimeParse = moment(
-              Number(parseDate(item.TransactionInfo.TranscationTime))
-            ).format("yyyy-MM-DD HH:mm:ss");
+            item.TransactionInfo.TranscationTimeParse = moment(Number(parseDate(item.TransactionInfo.TranscationTime))).format("yyyy-MM-DD HH:mm:ss");
           }
+          // 发布状态
+          item.ReleaseStatusNameParse = dicCodeToDicName(dicRes.data.data,item.ReleaseStatus);
+          // 项目状态
+          item.ProjectStatusNameParse = dicCodeToDicName(dicRes.data.data,item.ProjectStatus);
+          // 成交状态
+          item.CompleteDealStatusNameParse = dicCodeToDicName(dicRes.data.data,item.CompleteDealStatus ? item.CompleteDealStatus : 2064002) || '已成交待确认';
         });
         modelForm.list = res.data.data;
         modelForm.dicList = dicRes.data.data;
@@ -279,15 +375,13 @@ export default defineComponent({
     }
 
     // 进入
-    function enterDeal(index:number) {
-      modelForm.list[index].isDealShow = true
-      console.log("modelForm.list[index].isDealShow", modelForm.list[index].isDealShow)
+    function enterDeal(index: number) {
+      modelForm.list[index].isDealShow = true;
     }
 
     // 退出
-    function leaveDeal(index:number) {
-      modelForm.list[index].isDealShow = false
-      console.log("modelForm.list[index]", modelForm.list[index].isDealShow)
+    function leaveDeal(index: number) {
+      modelForm.list[index].isDealShow = false;
     }
     return {
       ruleForm,
@@ -295,7 +389,7 @@ export default defineComponent({
       rules,
       submitForm,
       enterDeal,
-      leaveDeal
+      leaveDeal,
     };
   },
 });
@@ -338,5 +432,24 @@ export default defineComponent({
 }
 :deep(.el-button) {
   width: 80px;
+}
+.btnStyle {
+  display: block;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
 </style>
