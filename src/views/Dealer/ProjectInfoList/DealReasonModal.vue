@@ -1,10 +1,10 @@
 <template>
-  <div class="modal dealNotModal" style="display: none">
+  <div class="modal dealNotModal" v-show="visible">
     <div class="modal_dialog fadeInBlowUp">
       <div class="modal_content">
         <div class="header ofw">
           <p class="fl">交易未履行</p>
-          <a class="off fr closeModal" href="javascript:void(0)">×</a>
+          <span class="off fr closeModal" href="javascript:void(0)" @click="offClick()">×</span>
         </div>
         <div class="info">
           <p class="red line pb15">
@@ -22,8 +22,8 @@
           ></textarea>
         </div>
         <div class="modal_footer">
-          <a class="btn btn_red mt20 dealNotModalSure">确认</a>
-          <a class="btn btn_gray mt20 closeModal">取消</a>
+          <a class="btn btn_red mt20" @click="sureClick()">确认</a>
+          <a class="btn btn_gray mt20" @click="offClick()">取消</a>
         </div>
       </div>
     </div>
@@ -32,13 +32,29 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
-  setup() {
-    return {};
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props, { emit }) {
+    // 点击确认
+    function sureClick() {
+      emit("sureClickHandle", false)
+    }
+    // 点击取消
+    function offClick() {
+      emit("sureClickHandle", false)
+    }
+    return {
+      sureClick,
+      offClick
+    };
   },
 });
 </script>
-
 <style scoped>
+
 </style>

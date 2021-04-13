@@ -4,7 +4,7 @@
         <div class="modal_content">
             <div class="header ofw">
                 <p class="fl">确认成交</p>
-                <a class="off fr closeModal" href="javascript:void(0)">×</a>
+                <span class="off fr closeModal" @click="offClick()">×</span>
             </div>
             <div class="info">
                 <p class="red line pb15"><i class="iconfont icon-wenhao"></i>确认成交是指该标的物尾款已付，交割手续已经完成。</p>
@@ -47,7 +47,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.modal{
-  display: block;
-}
+
 </style>

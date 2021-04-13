@@ -33,8 +33,7 @@
               v-model="modelForm.ReleaseStatus"
               placeholder="请选择发布状态"
             >
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option v-for="item in ReleaseStatusArr" :key="item.DicCode" :label="item.DicName" :value="item.DicCode"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -47,8 +46,7 @@
               v-model="modelForm.ProjectStatus"
               placeholder="请选择拍卖状态"
             >
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option v-for="item in ProjectStatusArr" :key="item.DicCode" :label="item.DicName" :value="item.DicCode"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="竞拍时间" class="form_item other">
@@ -267,17 +265,17 @@
               >继续处置</span>
               <span 
                 class="blue btnStyle" 
-                @click="dealProject('showDealSureModal')"
+                @click="dealProject('showDealSureModal', index)"
                 v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
               >确认成交</span>
               <span 
                 class="blue btnStyle" 
-                @click="dealProject('showDealReasonModal')"
+                @click="dealProject('showDealReasonModal', index)"
                 v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
               >交易未履行</span>
               <span 
                 class="blue btnStyle"
-                @click="dealNotProject(item.AuctionProjectID)"
+                @click="watchPay(index)"
                 v-if="(item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064001)) || (item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064003))"
               >查看费用</span>
               <span 
@@ -305,12 +303,15 @@
   </div>
   <!-- 确认成交弹窗 -->
   <is-sure-deal-modal :visible="modelForm.showDealSureModal" @sureClickHandle="getSureClick" />
-
+  <!-- 交易未履行弹出 -->
+  <deal-reason-modal :visible="modelForm.showDealReasonModal" @sureClickHandle="getNotDealClick" />
+  <!-- 查看费用弹窗 -->
+  <watch-pay-modal :visible="modelForm.showWatchPayModal" @sureClickHandle="getWatchPay" />
 </template>
 
 <script lang="ts">
 import { ElForm } from "element-plus";
-import { defineComponent, reactive, ref, unref, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, ref, unref, toRefs, onMounted, computed } from "vue";
 import { getList } from "@/service/auction";
 import { getDicList } from "@/service/common";
 import { dicCodeToDicName, number_format, parseDate } from "@/utils/utils";
@@ -319,6 +320,7 @@ import { DicType } from "@/types/types";
 import { useRouter } from "vue-router";
 import IsSureDealModal from '@/views/Dealer/ProjectInfoList/IsSureDealModal.vue';
 import DealReasonModal from '@/views/Dealer/ProjectInfoList/DealReasonModal.vue';
+import WatchPayModal from '@/views/Dealer/ProjectInfoList/WatchPayModal.vue';
 
 interface modelFormProp {
   ProjectName: string | undefined,  // 标的物名称
@@ -328,12 +330,16 @@ interface modelFormProp {
   StartDateEnd: string | undefined, // 竞拍截止时间
   list: any[], // 数据源
   dicList: DicType[], // 数据字典数据源
+  current: number, // 当前列
   showDealSureModal: boolean, // 是否展示确认成交弹窗
   showDealReasonModal: boolean, // 是否展示交易未履行弹窗
+  showWatchPayModal: boolean, // 是否展示查看费用弹窗
 }
 export default defineComponent({
   components: {
-    IsSureDealModal
+    IsSureDealModal,
+    DealReasonModal,
+    WatchPayModal,
   },
   setup() {
     // form对象
@@ -348,7 +354,9 @@ export default defineComponent({
       list: [],
       dicList: [],
       showDealSureModal: false,
-      showDealReasonModal: false
+      showDealReasonModal: false,
+      showWatchPayModal: false,
+      current: -1,
     });
     // 规则
     const rules = {
@@ -408,6 +416,15 @@ export default defineComponent({
       }
     });
 
+    // 项目状态
+    const ProjectStatusArr = computed(()=> {
+      return modelForm.dicList.filter(x=>x.SubTypeCode === 2062)
+    })
+    
+    const ReleaseStatusArr = computed(()=> {
+      return modelForm.dicList.filter(x=>x.SubTypeCode === 2063)
+    })
+
     // 查询
     async function submitForm() {
       const form = unref(ruleForm);
@@ -433,16 +450,27 @@ export default defineComponent({
       router.push(`/dealer/projectinfoadd?id=${id}&type=${type}`)
     }
 
-    // 点击确认成交
-    function dealProject(key:string): void {
+    // 点击确认成交、交易未履行
+    function dealProject(key:'showDealSureModal' | 'showDealReasonModal' | 'showWatchPayModal', id: string): void {
       modelForm[key] = true
-      console.log("modelForm", modelForm)
+    }
+    // 点击查看费用弹窗
+    function watchPay(index: number) {
+      modelForm.current = index
+      modelForm.showWatchPayModal = true
     }
 
     // 接收子组件点击确认成交弹窗
-    function getSureClick(code: boolean) {
-      console.log("code", code)
+    function getSureClick(code: boolean): void {
       modelForm.showDealSureModal = code
+    }
+    // 接收子组件点击交易未履行弹窗
+    function getNotDealClick(code: boolean): void {
+      modelForm.showDealReasonModal = code
+    }
+    // 接收子组件点击查看费用的确定按钮
+    function getWatchPay(code: boolean):void {
+      modelForm.showWatchPayModal = code
     }
     return {
       ruleForm,
@@ -453,7 +481,12 @@ export default defineComponent({
       leaveDeal,
       goToDetail,
       dealProject,
-      getSureClick
+      getSureClick,
+      getNotDealClick,
+      watchPay,
+      getWatchPay,
+      ProjectStatusArr,
+      ReleaseStatusArr
     };
   },
 });
