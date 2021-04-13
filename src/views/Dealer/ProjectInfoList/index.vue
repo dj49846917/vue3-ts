@@ -132,8 +132,8 @@
                   item.ProjectStatus === 2062003 &&
                   item.TransactionInfo
                 "
-                @mouseenter="enterDeal(index)"
-                @mouseleave="leaveDeal(index)"
+                @mouseenter="enterDeal(index, 'isDealShow')"
+                @mouseleave="leaveDeal(index, 'isDealShow')"
               >
                 成交详情<i class="iconfont icon-right"></i>
                 <div class="a-m-tip endContent" v-show="item.isDealShow">
@@ -172,9 +172,13 @@
               <!-- 发布状态为审核通过，并且项目状态为已撤销 -->
               <div v-else-if="item.ReleaseStatus === 2063004 &&item.ProjectStatus === 2062005">
                 {{ item.ProjectStatusNameParse }}
-                <div class="deal_detail blue endBtn">理由
+                <div 
+                  class="deal_detail blue endBtn" 
+                  @mouseenter="enterDeal(index, 'isReturnReason')"
+                  @mouseleave="leaveDeal(index, 'isReturnReason')"
+                >理由
                   <i class="iconfont icon-right"></i>
-                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                  <div class="a-m-tip a-m-tip2 endContent" v-show="item.isReturnReason">
                     <i><s></s></i>
                     <div class="tip-wrap">撤回理由:
                       <span class="returnReasonTip">{{ item.ProjectStatusDescription }}</span>
@@ -185,9 +189,13 @@
               <!-- 发布状态为审核通过，并且项目状态为已终止 -->
               <div v-else-if="item.ReleaseStatus === 2063004 && item.ProjectStatus === 2062006">
                 {{ item.ProjectStatusNameParse }}
-                <div class="deal_detail blue endBtn">理由
+                <div 
+                  class="deal_detail blue endBtn"
+                  @mouseenter="enterDeal(index, 'isOffReason')"
+                  @mouseleave="leaveDeal(index, 'isOffReason')"
+                >理由
                   <i class="iconfont icon-right"></i>
-                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                  <div class="a-m-tip a-m-tip2 endContent" v-show="item.isOffReason">
                     <i><s></s></i>
                     <div class="tip-wrap">
                       终止理由: {{ item.ProjectStatusDescription }}
@@ -198,9 +206,13 @@
               <!-- 发布状态为审核通过，并且项目状态为已成交,成交状态为未履行 -->
               <div v-else-if="item.ReleaseStatus === 2063004 && item.ProjectStatus === 2062003 && item.CompleteDealStatus === 2064001">
                 {{ item.ProjectStatusNameParse }}
-                <div class="deal_detail blue endBtn">理由
+                <div 
+                  class="deal_detail blue endBtn"
+                  @mouseenter="enterDeal(index, 'isNotDealReason')"
+                  @mouseleave="leaveDeal(index, 'isNotDealReason')"
+                >理由
                   <i class="iconfont icon-right"></i>
-                  <div class="a-m-tip a-m-tip2 endContent" style="display: none">
+                  <div class="a-m-tip a-m-tip2 endContent" v-show="item.isNotDealReason">
                     <i><s></s></i>
                     <div class="tip-wrap">
                       交易未履行理由: {{ item.CompleteDealDescription }}
@@ -215,12 +227,12 @@
             <td class="v-m operate">
               <span 
                 class="blue btnStyle" 
-                @click="editProject(item.AuctionProjectID)" 
+                @click="goToDetail(item.AuctionProjectID, 'edit')" 
                 v-if="item.ReleaseStatus === 2063001 || item.ReleaseStatus === 2063002 || item.ReleaseStatus === 2063005"
               >编辑标的物</span>
               <span 
                 class="blue btnStyle" 
-                @click="watchProject(item.AuctionProjectID)"
+                @click="goToDetail(item.AuctionProjectID, 'watch')"
                 v-if="item.ReleaseStatus === 2063001 || item.ReleaseStatus === 2063002 || item.ReleaseStatus === 2063005 || item.ProjectStatus === 2062001 || item.ProjectStatus === 2062002 || item.ProjectStatus === 2062005 || item.ProjectStatus === 2062006"
               >查看</span>
               <span 
@@ -240,7 +252,7 @@
               >撤回</span>
               <span 
                 class="blue btnStyle" 
-                @click="copyProject(item.AuctionProjectID)"
+                @click="goToDetail(item.AuctionProjectID, 'copy')"
                 v-if="item.ProjectStatus === 2062001 || item.ProjectStatus === 2062002 || item.ProjectStatus === 2062004 || item.ProjectStatus === 2062005"
               >复制拍品</span>
               <span 
@@ -250,17 +262,17 @@
               >中止</span>
               <span 
                 class="blue btnStyle" 
-                @click="copyProject(item.AuctionProjectID)"
+                @click="goToDetail(item.AuctionProjectID, 'copy')"
                 v-if="item.ProjectStatus === 2062004"
               >继续处置</span>
               <span 
                 class="blue btnStyle" 
-                @click="dealProject(item.AuctionProjectID)"
+                @click="dealProject('showDealSureModal')"
                 v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
               >确认成交</span>
               <span 
                 class="blue btnStyle" 
-                @click="dealNotProject(item.AuctionProjectID)"
+                @click="dealProject('showDealReasonModal')"
                 v-if="item.ProjectStatus === 2062003 && (!item.CompleteDealStatus || item.CompleteDealStatus === 2064002)"
               >交易未履行</span>
               <span 
@@ -291,6 +303,9 @@
       </div>
     </div>
   </div>
+  <!-- 确认成交弹窗 -->
+  <is-sure-deal-modal :visible="modelForm.showDealSureModal" @sureClickHandle="getSureClick" />
+
 </template>
 
 <script lang="ts">
@@ -301,17 +316,25 @@ import { getDicList } from "@/service/common";
 import { dicCodeToDicName, number_format, parseDate } from "@/utils/utils";
 import moment from "moment";
 import { DicType } from "@/types/types";
+import { useRouter } from "vue-router";
+import IsSureDealModal from '@/views/Dealer/ProjectInfoList/IsSureDealModal.vue';
+import DealReasonModal from '@/views/Dealer/ProjectInfoList/DealReasonModal.vue';
 
 interface modelFormProp {
-  ProjectName: string | undefined,
-  ReleaseStatus: number | null,
-  ProjectStatus: number | null,
-  StartDateBeg: string | undefined,
-  StartDateEnd: string | undefined,
-  list: any[],
-  dicList: DicType[],
+  ProjectName: string | undefined,  // 标的物名称
+  ReleaseStatus: number | null,     // 发布状态
+  ProjectStatus: number | null,     // 项目状态
+  StartDateBeg: string | undefined, // 竞拍开始时间
+  StartDateEnd: string | undefined, // 竞拍截止时间
+  list: any[], // 数据源
+  dicList: DicType[], // 数据字典数据源
+  showDealSureModal: boolean, // 是否展示确认成交弹窗
+  showDealReasonModal: boolean, // 是否展示交易未履行弹窗
 }
 export default defineComponent({
+  components: {
+    IsSureDealModal
+  },
   setup() {
     // form对象
     const ruleForm = ref<typeof ElForm>();
@@ -324,6 +347,8 @@ export default defineComponent({
       StartDateEnd: "",
       list: [],
       dicList: [],
+      showDealSureModal: false,
+      showDealReasonModal: false
     });
     // 规则
     const rules = {
@@ -331,6 +356,8 @@ export default defineComponent({
         { max: 30, message: "最多只能输入30个字符", trigger: "blur" },
       ],
     };
+
+    const router = useRouter()
 
     onMounted(async () => {
       try {
@@ -357,6 +384,12 @@ export default defineComponent({
           item.BidIncrementParse = number_format(item.BidIncrement || 0, 2);
           // 是否展示成交信息
           item.isDealShow = false;
+          // 是否展示已撤回理由
+          item.isReturnReason = false;
+          // 是否展示终止理由
+          item.isOffReason = false;
+          // 是否展示交易未履行理由
+          item.isNotDealReason = false;
           // 有成交信息
           if (item.TransactionInfo) {
             item.TransactionInfo.TranscationTimeParse = moment(Number(parseDate(item.TransactionInfo.TranscationTime))).format("yyyy-MM-DD HH:mm:ss");
@@ -386,13 +419,30 @@ export default defineComponent({
     }
 
     // 进入
-    function enterDeal(index: number) {
-      modelForm.list[index].isDealShow = true;
+    function enterDeal(index: number, key: string):void {
+      modelForm.list[index][key] = true;
     }
 
     // 退出
-    function leaveDeal(index: number) {
-      modelForm.list[index].isDealShow = false;
+    function leaveDeal(index: number, key: string):void {
+      modelForm.list[index][key] = false;
+    }
+
+    // 点击按钮操作
+    function goToDetail(id: string, type: string): void {
+      router.push(`/dealer/projectinfoadd?id=${id}&type=${type}`)
+    }
+
+    // 点击确认成交
+    function dealProject(key:string): void {
+      modelForm[key] = true
+      console.log("modelForm", modelForm)
+    }
+
+    // 接收子组件点击确认成交弹窗
+    function getSureClick(code: boolean) {
+      console.log("code", code)
+      modelForm.showDealSureModal = code
     }
     return {
       ruleForm,
@@ -401,6 +451,9 @@ export default defineComponent({
       submitForm,
       enterDeal,
       leaveDeal,
+      goToDetail,
+      dealProject,
+      getSureClick
     };
   },
 });
