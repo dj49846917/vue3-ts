@@ -1,0 +1,61 @@
+@import '@/assets/css/varible.scss';
+
+.footer_btn .saveBtn {
+  width: 200px;
+  height: 50px;
+  background: #c7171e;
+  color: #fff;
+  border-radius: 2px;
+  display: inline-block;
+  text-align: center;
+  line-height: 50px;
+  margin: 25px 15px;
+  font-size: 16px;
+}
+.footer_btn .zancun{
+  background: #fff;
+  color: #c7171e;
+}
+.el-form-item {
+  display: inline-block;
+  height: $addProjectHeight;
+}
+:deep(.el-form-item__content) {
+  @include addProjectFormHeight;
+}
+.el-input {
+  @include addProjectFormHeight;
+  width: 200px;
+}
+:deep(.el-input__inner) {
+  @include addProjectFormHeight;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.manager_main label {
+  width: 130px;
+  font-weight: normal;
+  text-align: right;
+  float: left;
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.notice {
+  width: 435px;
+}
+.textarea {
+  width: 85%;
+  :deep(.el-form-item__error) {
+    position:static;
+  }
+}
+.form_name {
+  line-height: $addProjectHeight !important;
+  margin-bottom: 0;
+}

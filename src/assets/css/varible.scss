@@ -1,0 +1,7 @@
+$lineHeight: 40px; // 通用form高度
+$addProjectHeight: 35px; // 新增标的物form高度
+
+@mixin addProjectFormHeight { // 新增标的物的form
+  height: $addProjectHeight;
+  line-height: $addProjectHeight;
+}

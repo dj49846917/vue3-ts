@@ -9,32 +9,27 @@
       <!--资产类型-->
       <div class="manager_main">
         <span class="tip_text">资产类型</span>
-        <el-form-item prop="AssetType" label="选择类目: ">
-          <el-select v-model="addForm.AssetType" placeholder="请选择类目">
-            <el-option value="2060001" label="房产"></el-option>
-            <el-option value="2060002" label="债权"></el-option>
-          </el-select>
-          <span class="gray9">请选择正确类目，以便买家快速找到</span>
-        </el-form-item>
-        <form class="mt10">
+        <div class="mt10">
           <div class="form_item mb10 ofw form-group has-feedback">
             <label class="form_name"><i class="red">*</i>选择类目：</label>
-            <div class="form_value">
-              <select>
-                <option value="房产">房产</option>
-                <option value="债权">债权</option>
-              </select>
+            <el-form-item prop="AssetType">
+              <el-select v-model="addForm.AssetType" placeholder="请选择类目">
+                <el-option
+                  :value="item.DicCode"
+                  :label="item.DicName"
+                  v-for="item in assetTypeArr"
+                  :key="item.DicCode"
+                ></el-option>
+              </el-select>
               <span class="gray9">请选择正确类目，以便买家快速找到</span>
-            </div>
-            <p class="error">请选择类目</p>
-            <!--错误提示-->
+            </el-form-item>
           </div>
-        </form>
+        </div>
       </div>
       <!--基本描述-->
-      <basic-description />
+      <basic-description :addForm="addForm" :addRules="addRules" />
       <!--资产属性-->
-      <house-assets-property />
+      <house-assets-property :transferModeArr="transferModeArr" :addForm="addForm" :addRules="addRules" />
       <!--资产详细描述-->
       <div class="manager_main">
         <span class="tip_text">资产详细描述</span>
@@ -207,19 +202,28 @@
           </div>
         </form>
       </div>
-
-      <div class="btn_box mt35">
-        <a href="">保存草稿</a>
-        <a href="">提交</a>
-        <el-button type="primary" @click="save()">提交</el-button>
-        <!--提交按钮默认灰色，点保存按钮后，下一步变红可点击-->
+      <div class="footer_btn">
+        <!--默认隐藏，页面往下滑动一段距离后展示出来，当滑动至能看到页面底部保存和提交按钮时隐藏-->
+        <div class="container">
+          <div class="zancun saveBtn" @click="save()">保存草稿</div>
+          <div class="yulan saveBtn" @click="save()">预览</div>
+          <div class="saveBtn" @click="save()">提交</div>
+        </div>
       </div>
     </el-form>
+    <!--底部按钮-->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, unref } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  unref,
+} from "vue";
 import CreateNotice from "@/views/Dealer/ProjectInfoAdd/CreateNotice.vue";
 import BasicDescription from "@/views/Dealer/ProjectInfoAdd/BasicDescription.vue";
 import HouseAssetsProperty from "@/views/Dealer/ProjectInfoAdd/HouseAssetsProperty.vue";
@@ -230,6 +234,11 @@ import SetPrice from "@/views/Dealer/ProjectInfoAdd/SetPrice.vue";
 import CreditorPersonInfo from "@/views/Dealer/ProjectInfoAdd/CreditorPersonInfo.vue";
 import CreditorAssetsInfo from "@/views/Dealer/ProjectInfoAdd/CreditorAssetsInfo.vue";
 import { ElForm } from "element-plus";
+import { getDicList } from "@/service/common";
+import {
+  addRules,
+  ProjectInfoAddController,
+} from "@/views/Dealer/ProjectInfoAdd/controller";
 
 export default defineComponent({
   components: {
@@ -245,18 +254,21 @@ export default defineComponent({
   },
   setup() {
     const projectForm = ref<typeof ElForm>();
-    // 表单model
-    const addForm = reactive({
-      NoticeTitle: "", // 公告标题
-      NoticeContent: "", //公告详情
-      AssetType: "",
+    let { addForm, assetTypeArr, transferModeArr } = ProjectInfoAddController();
+
+    // 初始化
+    onMounted(async () => {
+      try {
+        const params = {
+          SubTypeCode:
+            "1000,1110,1816,2003,2004,2033,2052,2053,2055,2056,2060,2074,2075,2085,2086",
+        };
+        const res = await getDicList(params);
+        addForm.dicList = res.data.data;
+      } catch (error) {
+        console.log("error", error);
+      }
     });
-    // 规则
-    const addRules = {
-      NoticeTitle: [{ required: true, message: "请输入公告标题", trigger: "blur" }],
-      NoticeContent: [{ required: true, message: "请输入公告详情", trigger: "blur" }],
-      AssetType: [{ required: true, message: "请选择类目", trigger: "change" }],
-    };
 
     // 点击保存
     async function save() {
@@ -265,7 +277,7 @@ export default defineComponent({
       try {
         await form.validate();
         const { AssetType } = addForm;
-        console.log("AssetType", AssetType)
+        console.log("AssetType", AssetType);
       } catch (error) {}
     }
 
@@ -273,12 +285,14 @@ export default defineComponent({
       projectForm,
       addForm,
       addRules,
-      save
+      save,
+      assetTypeArr,
+      transferModeArr
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-
+@import '@/views/Dealer/ProjectInfoAdd/projectInfoAdd.scss';
 </style>

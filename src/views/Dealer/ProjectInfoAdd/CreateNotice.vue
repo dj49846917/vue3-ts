@@ -1,18 +1,18 @@
 <template>
   <div class="manager_main">
     <span class="tip_text">创建公告</span>
-    <form class="mt10">
+    <div class="mt10">
       <div class="form_item mb10 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>公告标题：</label>
         <span class="useful-text">关于</span>
         <el-form-item prop="NoticeTitle">
-          <el-input v-model="addForm.NoticeTitle" />
+          <el-input class="notice" v-model="addForm.NoticeTitle" placeholder="填写公告标题，不超过150字" />
         </el-form-item>
         <span>的公告</span>
       </div>
       <div class="form_item mb10 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>公告详情：</label>
-        <el-form-item prop="NoticeContent">
+        <el-form-item prop="NoticeContent" class="textarea">
           <el-input type="textarea" v-model="addForm.NoticeContent" />
         </el-form-item>
         <!--错误提示-->
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -60,8 +60,6 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.el-form-item {
-  display: inline-block;
-}
+<style scoped lang="scss">
+@import '@/views/Dealer/ProjectInfoAdd/projectInfoAdd.scss';
 </style>

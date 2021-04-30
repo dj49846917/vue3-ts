@@ -4,17 +4,16 @@
     <form class="mt10">
       <div class="form_item mb10 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>流转方式：</label>
-        <div class="form_value">
-          <select>
-            <option value="请选择">请选择</option>
-            <option value="转让">转让</option>
-            <option value="出租">出租</option>
-            <option value="转租">转租</option>
-          </select>
-          <span class="gray9"></span>
-        </div>
-        <p class="error">请选择流转方式</p>
-        <!--错误提示-->
+        <el-form-item prop="HouseAuctionInfo_TransferMode">
+          <el-select v-model="addForm.HouseAuctionInfo_TransferMode" placeholder="请选择">
+            <el-option
+              :value="item.DicCode"
+              :label="item.DicName"
+              v-for="item in transferModeArr"
+              :key="item.DicCode"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </div>
     </form>
     <form class="mt10 ofw">
@@ -289,11 +288,15 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  setup() {
-    return {};
+  props: ["addForm", "addRules", "transferModeArr"],
+  setup(props) {
+    console.log("props", props)
+    return {
+    };
   },
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/views/Dealer/ProjectInfoAdd/projectInfoAdd.scss';
 </style>
