@@ -15,6 +15,13 @@ export const addRules = {
     { max: 30, message: "内容不能超过30个字", trigger: "blur" },
   ],
   HouseAuctionInfo_TransferMode: [{ required: true, message: "请选择流转方式", trigger: "change" }],
+  HouseAuctionInfo_PropertyType: [{ required: true, message: "请选择物业类型", trigger: "change" }],
+  HouseAuctionInfo_Provice: [{ required: true, message: "请选择省", trigger: "change" }],
+  HouseAuctionInfo_City: [{ required: true, message: "请选择市", trigger: "change" }],
+  HouseAuctionInfo_RegionID: [{ required: true, message: "请选择区", trigger: "change" }],
+  HouseAuctionInfo_AddressDetial: [{ required: true, message: "请输入详细地址", trigger: "blur" }],
+  HouseAuctionInfo_Longitude: [{ required: true, message: "请输入经度", trigger: "change" }],
+  HouseAuctionInfo_Latitude: [{ required: true, message: "请输入纬度", trigger: "blur" }],
 };
 
 // 表单数据源
@@ -57,14 +64,8 @@ export function ProjectInfoAddController() {
     return addForm.dicList.filter((x) => x.SubTypeCode === 2060);
   });
 
-  // 流转方式
-  const transferModeArr = computed(() => {
-    return addForm.dicList.filter((x) => x.SubTypeCode === 2052);
-  });
-
   return {
     addForm,
     assetTypeArr,
-    transferModeArr
   }
 }

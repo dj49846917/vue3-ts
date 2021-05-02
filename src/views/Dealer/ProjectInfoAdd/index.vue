@@ -29,7 +29,10 @@
       <!--基本描述-->
       <basic-description :addForm="addForm" :addRules="addRules" />
       <!--资产属性-->
-      <house-assets-property :transferModeArr="transferModeArr" :addForm="addForm" :addRules="addRules" />
+      <house-assets-property
+        :addForm="addForm" 
+        :addRules="addRules" 
+      />
       <!--资产详细描述-->
       <div class="manager_main">
         <span class="tip_text">资产详细描述</span>
@@ -254,7 +257,7 @@ export default defineComponent({
   },
   setup() {
     const projectForm = ref<typeof ElForm>();
-    let { addForm, assetTypeArr, transferModeArr } = ProjectInfoAddController();
+    let { addForm, assetTypeArr } = ProjectInfoAddController();
 
     // 初始化
     onMounted(async () => {
@@ -286,8 +289,7 @@ export default defineComponent({
       addForm,
       addRules,
       save,
-      assetTypeArr,
-      transferModeArr
+      assetTypeArr
     };
   },
 });

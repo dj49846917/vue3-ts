@@ -5,7 +5,10 @@
       <div class="form_item mb10 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>流转方式：</label>
         <el-form-item prop="HouseAuctionInfo_TransferMode">
-          <el-select v-model="addForm.HouseAuctionInfo_TransferMode" placeholder="请选择">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_TransferMode"
+            placeholder="请选择"
+          >
             <el-option
               :value="item.DicCode"
               :label="item.DicName"
@@ -19,96 +22,102 @@
     <form class="mt10 ofw">
       <div class="form_item mb10 col-lg-6 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>物业类型：</label>
-        <div class="form_value">
-          <select>
-            <option value="请选择">请选择</option>
-            <option value="住宅用房">住宅用房</option>
-            <option value="工业用房">工业用房</option>
-            <option value="商业用房">商业用房</option>
-            <option value="其他用房">其他用房</option>
-            <option value="车位">车位</option>
-          </select>
-          <span class="gray9"></span>
-        </div>
-        <p class="error">请选择物业类型</p>
-        <!--错误提示-->
+        <el-form-item prop="HouseAuctionInfo_PropertyType">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_PropertyType"
+            placeholder="请选择"
+          >
+            <el-option
+              :value="item.DicCode"
+              :label="item.DicName"
+              v-for="item in propertyTypeArr"
+              :key="item.DicCode"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </div>
       <div class="form_item mb10 col-lg-6 ofw form-group has-feedback">
         <label class="form_name"><i class="red">*</i>房屋用途：</label>
-        <div class="form_value">
-          <select>
-            <option value="请选择">请选择</option>
-            <option value="商住房">商住房</option>
-            <option value="商铺">商铺</option>
-            <option value="写字楼">写字楼</option>
-            <option value="其他">其他</option>
-          </select>
-          <span class="gray9"></span>
-        </div>
-        <p class="error">请选择房屋用途</p>
-        <!--错误提示-->
+        <el-form-item prop="HouseAuctionInfo_HouseUse">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_HouseUse"
+            placeholder="请选择"
+          >
+            <el-option
+              :value="item.DicCode"
+              :label="item.DicName"
+              v-for="item in houseUseArr"
+              :key="item.DicCode"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </div>
     </form>
     <form class="mt10">
       <div class="form_item mb10 form-group has-feedback">
         <label class="form_name"><i class="red">*</i>所在地：</label>
-        <div class="form_value">
-          <select>
-            <option value="请选择">请选择</option>
-          </select>
-          <select>
-            <option value="请选择">请选择</option>
-          </select>
-          <select>
-            <option value="请选择">请选择</option>
-          </select>
-          <span class="gray9"></span>
-        </div>
-        <div class="form_value input_box">
-          <input
-            class="big_input"
-            type="text"
+        <el-form-item prop="HouseAuctionInfo_Provice">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_Provice"
+            placeholder="请选择"
+          >
+            <el-option value="重庆市" label="重庆市"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="HouseAuctionInfo_City">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_City"
+            placeholder="请选择"
+          >
+            <el-option value="重庆市" label="重庆市"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="HouseAuctionInfo_RegionID">
+          <el-select
+            v-model="addForm.HouseAuctionInfo_RegionID"
+            placeholder="请选择"
+          >
+            <el-option
+              :value="item.DicCode"
+              :label="item.DicName"
+              v-for="item in regionIDArr"
+              :key="item.DicCode"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="HouseAuctionInfo_AddressDetial" class="item">
+          <el-input
+            class="addressDetial"
+            v-model="addForm.HouseAuctionInfo_AddressDetial"
             placeholder="请输入详细地址"
-            name=""
           />
-          <span class="gray9"></span>
-          <ul class="input_list bg-white">
-            <li class="omit">财富中心</li>
-            <li class="omit">财富中心财富中心</li>
-            <li class="omit">
-              财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心财富中心
-            </li>
-            <li class="omit">财富中心财富中心财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-            <li class="omit">财富中心财富中心财富中心</li>
-          </ul>
-        </div>
-        <p class="error" style="margin-left: 130px">请选择省市区</p>
-        <!--错误提示-->
+        </el-form-item>
       </div>
     </form>
     <form class="mt10 ofw">
-      <div class="form_item mb10 col-lg-5 form-group has-feedback">
-        <label class="form_name">经度：</label>
-        <div class="form_value">
-          <input type="text" placeholder="请输入" name="" />
-        </div>
+      <div class="form_item mb10 col-lg-6 ofw form-group has-feedback">
+        <label class="form_name"><i class="red">*</i>经度：</label>
+        <el-form-item prop="HouseAuctionInfo_Longitude">
+          <el-input
+            v-model="addForm.HouseAuctionInfo_Longitude"
+            placeholder="请输入经度"
+          />
+        </el-form-item>
       </div>
-      <div class="form_item mb10 col-lg-5 form-group has-feedback ofw">
-        <label class="form_name" style="width: auto">纬度：</label>
-        <div class="form_value">
-          <input class="" type="text" placeholder="请输入" name="" />
-          <a
-            class="btn"
-            href=""
-            style="height: 36px; margin-top: 0; line-height: 26px"
-            >查看地图</a
-          >
-        </div>
+      <div class="form_item mb10 col-lg-6 ofw form-group has-feedback latitude">
+        <label class="form_name"><i class="red">*</i>纬度：</label>
+        <el-form-item prop="HouseAuctionInfo_Latitude">
+          <el-input
+            v-model="addForm.HouseAuctionInfo_Latitude"
+            placeholder="请输入纬度"
+          />
+        </el-form-item>
+        <a
+          class="btn"
+          href="javascript:void(0)"
+          style="height: 36px; margin-top: 0; line-height: 26px"
+          >查看地图</a
+        >
       </div>
     </form>
     <form class="mt10">
@@ -285,18 +294,64 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   props: ["addForm", "addRules", "transferModeArr"],
   setup(props) {
-    console.log("props", props)
+    // 流转方式
+    const transferModeArr = computed(() => {
+      return props.addForm.dicList.filter(
+        (x: { SubTypeCode: number }) => x.SubTypeCode === 2052
+      );
+    });
+
+    // 物业类型
+    const propertyTypeArr = computed(() => {
+      return props.addForm.dicList.filter(
+        (x: { SubTypeCode: number }) => x.SubTypeCode === 2053
+      );
+    });
+
+    // 房屋用途
+    const houseUseArr = computed(() => {
+      return props.addForm.dicList.filter(
+        (x: { SubTypeCode: number }) => x.SubTypeCode === 2003
+      );
+    });
+
+    // 房屋用途
+    const regionIDArr = computed(() => {
+      return props.addForm.dicList.filter(
+        (x: { SubTypeCode: number }) => x.SubTypeCode === 1110
+      );
+    });
+
     return {
+      transferModeArr,
+      propertyTypeArr,
+      houseUseArr,
+      regionIDArr,
     };
   },
 });
 </script>
 
 <style scoped lang="scss">
-@import '@/views/Dealer/ProjectInfoAdd/projectInfoAdd.scss';
+@import "@/views/Dealer/ProjectInfoAdd/projectInfoAdd.scss";
+.item {
+  .addressDetial {
+    width: 435px;
+    margin-left: 130px;
+  }
+  :deep(.el-form-item__error) {
+    margin-left: 130px;
+  }
+}
+.latitude {
+  .btn {
+    border: solid 1px #dcdfe6;
+    padding: 5px 15px;
+  }
+}
 </style>

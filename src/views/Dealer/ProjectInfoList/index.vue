@@ -28,13 +28,17 @@
             prop="ReleaseStatus"
             class="form_item"
           >
-            <el-select
+            <use-select
+              :modelForm="modelForm"
+              :ReleaseStatusArr="ReleaseStatusArr"
+            />
+            <!-- <el-select
               clearable
               v-model="modelForm.ReleaseStatus"
               placeholder="请选择发布状态"
             >
               <el-option v-for="item in ReleaseStatusArr" :key="item.DicCode" :label="item.DicName" :value="item.DicCode"></el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item
             label="拍卖状态:"
@@ -321,6 +325,7 @@ import { useRouter } from "vue-router";
 import IsSureDealModal from '@/views/Dealer/ProjectInfoList/IsSureDealModal.vue';
 import DealReasonModal from '@/views/Dealer/ProjectInfoList/DealReasonModal.vue';
 import WatchPayModal from '@/views/Dealer/ProjectInfoList/WatchPayModal.vue';
+import UseSelect from "@/components/useSelect.vue";
 
 interface modelFormProp {
   ProjectName: string | undefined,  // 标的物名称
@@ -340,6 +345,7 @@ export default defineComponent({
     IsSureDealModal,
     DealReasonModal,
     WatchPayModal,
+    UseSelect,
   },
   setup() {
     // form对象

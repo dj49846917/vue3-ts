@@ -32,6 +32,16 @@
   padding-top: 7px;
   padding-bottom: 7px;
 }
+.el-select{
+  @include addProjectFormHeight;
+  width: 200px;
+}
+:deep(.el-input--suffix) {
+  line-height: 35px;
+}
+:deep(.el-input__icon) {
+  line-height: $addProjectHeight;
+}
 
 .manager_main label {
   width: 130px;
